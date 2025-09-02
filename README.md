@@ -1,145 +1,197 @@
-# Arch1ve - 음악 큐레이션 플랫폼
+# 🎵 Arch1ve - Music Curation Platform
 
-실시간 음악 공유와 커뮤니티 트렌드를 통한 새로운 음악 발견 플랫폼입니다.
+A real-time music sharing and community-driven music discovery platform built with Next.js, Firebase, and Spotify integration.
 
-## 🎵 주요 기능
+![Arch1ve Platform](https://img.shields.io/badge/Arch1ve-Music%20Curation%20Platform-orange)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Firebase](https://img.shields.io/badge/Firebase-Auth%20%26%20Firestore-yellow)
+![Spotify](https://img.shields.io/badge/Spotify-API-green)
 
-### 1. Wave 피드 (메인 탭)
-- 실시간 음악 공유 및 발견
-- 원형 앨범아트 (LP 레코드 메타포)
-- 30초 미리듣기 기능
-- 댓글 및 반응 시스템
+## ✨ Features
 
-### 2. 스테이션 (두 번째 탭)
-- 유튜브 플레이리스트 채널 구독/관리
-- Pinterest 스타일 그리드 레이아웃
-- 장르별 필터링
+### 🎧 Core Features
+- **Music Wave Feed**: Real-time music sharing with reactions (like, love, fire)
+- **Radio Station Management**: YouTube playlist integration and management
+- **Community Chart Voting**: Weekly themed playlists with community voting
+- **Music DNA Analytics**: Personalized music taste visualization
+- **Search & Discovery**: Find music, artists, and stations
 
-### 3. 차트 (세 번째 탭)
-- 주간 테마 기반 커뮤니티 투표
-- 틴더 스타일 투표 인터페이스
-- 우승자 발표 및 아카이브
+### 🔐 Authentication
+- **Google OAuth**: One-click authentication with Google
+- **Spotify Integration**: Connect Spotify account for enhanced features
+- **Profile Management**: User profiles with music preferences
 
-### 4. 프로필 (네 번째 탭)
-- 음악 DNA 시각화 (장르별 레이더 차트)
-- 청취 시간 그래프
-- 활동 히스토리
+### 🎨 Design Philosophy
+- **Minimalism**: Clean, distraction-free interface
+- **Turntable Metaphor**: Circular music cards like LP records
+- **Neumorphism**: Soft shadows and depth for physical metaphors
+- **Korean Localization**: Full Korean UI/UX
 
-## 🎨 디자인 철학
+## 🚀 Quick Start
 
-- **미니멀리즘**: 디터 람스의 설계 원칙 적용
-- **턴테이블 메타포**: LP 레코드처럼 원형으로 디자인된 음악 카드
-- **뉴모피즘**: 부드러운 그림자와 깊이감으로 물리적 은유 구현
-- **단일 포인트 컬러**: 오렌지 (#ff5500)
-
-## 🚀 시작하기
-
-### 필수 요구사항
+### Prerequisites
 - Node.js 18+ 
-- npm 또는 yarn
-- Firebase 프로젝트
-- Spotify API 키
-- YouTube API 키 (선택사항)
+- npm or yarn
+- Firebase project
+- Spotify Developer account
 
-### 설치
+### Installation
 
-1. 저장소 클론
-```bash
-git clone <repository-url>
-cd arch1ve
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/arch1ve.git
+   cd arch1ve
+   ```
 
-2. 의존성 설치
-```bash
-npm install
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-3. 환경 변수 설정
-```bash
-cp env.example .env.local
-```
-`.env.local` 파일을 편집하여 실제 API 키를 입력하세요.
+3. **Set up environment variables**
+   ```bash
+   cp env.example .env.local
+   ```
+   
+   Edit `.env.local` with your credentials:
+   ```env
+   # Firebase Configuration
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
-4. 개발 서버 실행
-```bash
-npm run dev
-```
+   # Spotify API Configuration
+   NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
+   SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+   NEXT_PUBLIC_SPOTIFY_REDIRECT_URI=http://localhost:3000/auth/spotify/callback
+   ```
 
-5. 브라우저에서 [http://localhost:3000](http://localhost:3000) 열기
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-## 🛠 기술 스택
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-- **프론트엔드**: Next.js 14, React 18, TypeScript
-- **스타일링**: Tailwind CSS, 뉴모피즘 디자인
-- **인증**: Firebase Authentication
-- **데이터베이스**: Firestore
-- **음악 API**: Spotify Web API, Apple Music API
-- **애니메이션**: Framer Motion
-- **아이콘**: Lucide React
+## 🏗️ Project Structure
 
-## 📱 반응형 디자인
-
-- iPhone SE (375px) ~ 데스크톱 (1440px) 지원
-- 모바일 우선 디자인
-- PWA 지원
-
-## 🔧 개발 가이드
-
-### 프로젝트 구조
 ```
 src/
-├── app/                 # Next.js App Router
-├── components/          # React 컴포넌트
-│   ├── ui/             # 기본 UI 컴포넌트
-│   ├── layout/         # 레이아웃 컴포넌트
-│   └── features/       # 기능별 컴포넌트
-├── lib/                # 유틸리티 및 설정
-├── types/              # TypeScript 타입 정의
-└── hooks/              # 커스텀 훅
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   │   └── spotify/       # Spotify API endpoints
+│   ├── auth/              # Authentication pages
+│   │   └── spotify/       # Spotify OAuth flow
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   └── providers.tsx      # Context providers
+├── components/            # React components
+│   ├── features/          # Feature components
+│   │   ├── ChartCard.tsx  # Chart voting cards
+│   │   ├── StationCard.tsx # Radio station cards
+│   │   └── WaveCard.tsx   # Music wave cards
+│   ├── layout/            # Layout components
+│   │   ├── BottomNavigation.tsx
+│   │   └── MainLayout.tsx
+│   └── ui/                # UI components
+│       ├── Button.tsx
+│       └── Card.tsx
+├── contexts/              # React contexts
+│   └── AuthContext.tsx    # Authentication context
+├── hooks/                 # Custom hooks
+│   └── useAuth.ts         # Authentication hook
+├── lib/                   # Utility libraries
+│   ├── firebase.ts        # Firebase configuration
+│   ├── mockData.ts        # Demo data
+│   ├── spotify.ts         # Spotify API utilities
+│   └── utils.ts           # General utilities
+└── types/                 # TypeScript types
+    └── index.ts           # Type definitions
 ```
 
-### 주요 컴포넌트
-- `Button`: 뉴모피즘 스타일 버튼
-- `Card`: 다양한 변형의 카드 컴포넌트
-- `BottomNavigation`: 하단 네비게이션
-- `MainLayout`: 메인 레이아웃
+## 🔧 Configuration
 
-## 🎯 다음 단계
+### Firebase Setup
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Authentication with Google provider
+3. Create a Firestore database
+4. Copy your Firebase config to `.env.local`
 
-1. **인증 시스템 구현**
-   - Firebase Authentication 설정
-   - Google 로그인 연동
-   - Spotify 계정 연결
+### Spotify Setup
+1. Create a Spotify app at [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+2. Add `http://localhost:3000/auth/spotify/callback` to redirect URIs
+3. Copy your Client ID and Secret to `.env.local`
 
-2. **Wave 피드 구현**
-   - 실시간 음악 공유 카드
-   - 무한 스크롤
-   - 상세 모달
+## 🧪 Testing
 
-3. **스테이션 기능**
-   - 유튜브 API 연동
-   - 플레이리스트 관리
+### Authentication Flow
+1. Visit [http://localhost:3000](http://localhost:3000)
+2. Click "Google로 시작하기" (Start with Google)
+3. Complete Google OAuth
+4. Click "Spotify 계정 연결" (Connect Spotify Account)
+5. Authorize Spotify access
 
-4. **차트 시스템**
-   - 투표 인터페이스
-   - 결과 시각화
+### Features Testing
+- **Wave Feed**: Browse music waves, try reactions
+- **Station Management**: Browse stations, test subscribe buttons
+- **Chart Voting**: Vote on tracks in weekly charts
+- **Search**: Try searching for music or artists
 
-5. **프로필 및 통계**
-   - 음악 DNA 차트
-   - 청취 통계
+## 📱 Mobile Experience
 
-## 📄 라이선스
+The app is fully responsive with:
+- Bottom navigation tabs
+- Touch-friendly interfaces
+- Mobile-optimized layouts
+- Progressive Web App ready
 
-MIT License
+## 🚀 Deployment
 
-## 🤝 기여하기
+### Vercel (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+### Manual Deployment
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+2. Start the production server:
+   ```bash
+   npm start
+   ```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📞 문의
+## 📄 License
 
-프로젝트에 대한 문의사항이 있으시면 이슈를 생성해 주세요.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Firebase](https://firebase.google.com/) - Backend services
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api/) - Music data
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Lucide React](https://lucide.dev/) - Icons
+
+## 📞 Support
+
+For support, email support@arch1ve.com or join our Discord community.
+
+---
+
+**Arch1ve** - Where music meets community 🎵
