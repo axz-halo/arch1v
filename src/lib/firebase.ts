@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, Auth } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 // 임시 Firebase 설정 (실제 프로젝트 생성 후 교체 필요)
 const firebaseConfig = {
@@ -13,10 +13,10 @@ const firebaseConfig = {
 };
 
 // Firebase 앱 초기화 (환경 변수가 없으면 null 반환)
-let app = null;
-let auth = null;
-let db = null;
-let googleProvider = null;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let googleProvider: GoogleAuthProvider | null = null;
 
 try {
   if (getApps().length === 0) {

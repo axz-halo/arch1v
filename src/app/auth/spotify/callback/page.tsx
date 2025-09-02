@@ -34,6 +34,7 @@ export default function SpotifyCallbackPage() {
         if (!res.ok) throw new Error(data.error || 'Failed to get token');
 
         if (!user) throw new Error('Not signed in');
+        if (!db) throw new Error('Firebase database not initialized');
         const userRef = doc(db, 'users', user.uid);
         await updateDoc(userRef, {
           spotifyConnected: true,
