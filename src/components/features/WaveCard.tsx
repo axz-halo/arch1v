@@ -5,6 +5,7 @@ import { Wave } from '@/types';
 import { formatRelativeTime, formatNumber } from '@/lib/utils';
 import { Play, Heart, MessageCircle, Share2 } from 'lucide-react';
 import Image from 'next/image';
+import SpotifyUriButton from '@/components/ui/SpotifyUriButton';
 
 interface WaveCardProps {
   wave: Wave;
@@ -50,6 +51,9 @@ const WaveCard: React.FC<WaveCardProps> = ({
     return wave.reactions.some(r => r.type === type);
   };
 
+  // Spotify URI 생성 (실제로는 트랙 데이터에서 가져와야 함)
+  const spotifyUri = wave.track.platformId ? `spotify:track:${wave.track.platformId}` : null;
+
   return (
     <div className="wave-card" onClick={() => onWaveSelect?.(wave)}>
       <div className="wave-meta">
@@ -76,6 +80,17 @@ const WaveCard: React.FC<WaveCardProps> = ({
         <button className="play-button" onClick={handlePlay}>
           <Play className="w-4 h-4" />
         </button>
+        
+        {spotifyUri && (
+          <SpotifyUriButton 
+            uri={spotifyUri} 
+            size="sm" 
+            variant="ghost"
+            className="reaction-btn"
+          >
+            Spotify
+          </SpotifyUriButton>
+        )}
         
         <button 
           className={`reaction-btn ${hasUserReacted('like') ? 'active' : ''}`}

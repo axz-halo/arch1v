@@ -1,35 +1,57 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { onAuthStateChanged, signInWithPopup, signOut, type User as FirebaseUser } from 'firebase/auth';
-import { auth, db, googleProvider } from '@/lib/firebase';
-import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import type { User as AppUser } from '@/types';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User as FirebaseUser, signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 
-interface AuthContextValue {
-  user: FirebaseUser | null;
-  profile: AppUser | null;
+interface User {
+  id: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  spotifyId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  followers: number;
+  following: number;
+  waveCount: number;
+  musicDNA?: {
+    kpop: number;
+    pop: number;
+    rock: number;
+    hiphop: number;
+    electronic: number;
+    jazz: number;
+    classical: number;
+    indie: number;
+  };
+}
+
+interface AuthContextType {
+  user: User | null;
+  profile: any;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
   signOutApp: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [profile, setProfile] = useState<AppUser | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!auth) {
-      setLoading(false);
-      return;
-    }
-    
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-
+    const unsubscribe = auth?.onAuthStateChanged(async (firebaseUser) => {
       if (firebaseUser) {
         if (!db) {
           console.error('Firebase database not initialized');
@@ -37,57 +59,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
         const userRef = doc(db, 'users', firebaseUser.uid);
-        const snap = await getDoc(userRef);
-
-        if (!snap.exists()) {
-          const newProfile: Omit<AppUser, 'id'> & { id?: string } = {
+        const userSnap = await getDoc(userRef);
+        
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          setUser({
+            id: firebaseUser.uid,
             email: firebaseUser.email || '',
-            displayName: firebaseUser.displayName || '익명 사용자',
+            displayName: userData.displayName || firebaseUser.displayName || '',
+            photoURL: userData.photoURL || firebaseUser.photoURL || undefined,
+            spotifyId: userData.spotifyId,
+            createdAt: userData.createdAt?.toDate() || new Date(),
+            updatedAt: userData.updatedAt?.toDate() || new Date(),
+            followers: userData.followers || 0,
+            following: userData.following || 0,
+            waveCount: userData.waveCount || 0,
+            musicDNA: userData.musicDNA,
+          });
+          setProfile(userData);
+        } else {
+          // 새 사용자 생성
+          const newUser = {
+            id: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            displayName: firebaseUser.displayName || '',
             photoURL: firebaseUser.photoURL || undefined,
-            spotifyId: undefined,
             createdAt: new Date(),
             updatedAt: new Date(),
             followers: 0,
             following: 0,
             waveCount: 0,
-            musicDNA: undefined,
           };
-
-          await setDoc(userRef, {
-            ...newProfile,
-            id: firebaseUser.uid,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-            spotifyConnected: false,
-          });
-          setProfile({ id: firebaseUser.uid, ...newProfile } as AppUser);
-        } else {
-          const data = snap.data() as AppUser & { updatedAt?: Date };
-          // best-effort touch updatedAt
-          try {
-            await updateDoc(userRef, { updatedAt: serverTimestamp() });
-          } catch {}
-          setProfile(data);
+          
+          await setDoc(userRef, newUser);
+          setUser(newUser);
+          setProfile(newUser);
         }
       } else {
+        setUser(null);
         setProfile(null);
       }
-
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const signInWithGoogleHandler = async () => {
-    if (!auth || !googleProvider) {
-      console.error('Firebase auth not initialized');
-      return;
-    }
-    await signInWithPopup(auth, googleProvider);
-  };
-
-  const signOutHandler = async () => {
+  const signOutApp = async () => {
     if (!auth) {
       console.error('Firebase auth not initialized');
       return;
@@ -95,23 +113,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await signOut(auth);
   };
 
-  const value = useMemo<AuthContextValue>(() => ({
+  const value = {
     user,
     profile,
     loading,
-    signInWithGoogle: signInWithGoogleHandler,
-    signOutApp: signOutHandler,
-  }), [user, profile, loading]);
+    signOutApp,
+  };
 
   return (
     <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuthContext = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuthContext must be used within AuthProvider');
-  return ctx;
 };

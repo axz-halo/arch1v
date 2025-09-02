@@ -8,8 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 
 export default function HomePage() {
-  const { user, profile, loading, signInWithGoogle, signOutApp } = useAuth();
-
+  const { user, profile, loading, signOutApp } = useAuth();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -28,55 +28,56 @@ export default function HomePage() {
         </div>
 
         {/* 기능 소개 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <Wave className="w-6 h-6 text-primary-500" />
-                Wave 피드
-              </CardTitle>
-              <CardDescription className="text-base">
-                실시간으로 듣고 있는 음악을 공유하고 다른 사용자들의 음악을 발견하세요
-              </CardDescription>
-            </CardHeader>
-          </Card>
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <Music className="w-6 h-6 text-primary-500" />
+                  Wave 피드
+                </CardTitle>
+                <CardDescription className="text-base">
+                  실시간으로 듣고 있는 음악을 공유하고 다른 사용자들의 음악을 발견하세요
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <Radio className="w-6 h-6 text-primary-500" />
-                스테이션
-              </CardTitle>
-              <CardDescription className="text-base">
-                플레이리스트를 구독하고 관리하여 나만의 음악 스테이션을 만들어보세요
-              </CardDescription>
-            </CardHeader>
-          </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <Radio className="w-6 h-6 text-primary-500" />
+                  스테이션
+                </CardTitle>
+                <CardDescription className="text-base">
+                  플레이리스트를 구독하고 관리하여 나만의 음악 스테이션을 만들어보세요
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <TrendingUp className="w-6 h-6 text-primary-500" />
-                차트
-              </CardTitle>
-              <CardDescription className="text-base">
-                커뮤니티 투표를 통해 주간 테마 플레이리스트에 참여하고 우승자를 발표하세요
-              </CardDescription>
-            </CardHeader>
-          </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <TrendingUp className="w-6 h-6 text-primary-500" />
+                  차트
+                </CardTitle>
+                <CardDescription className="text-base">
+                  커뮤니티 투표를 통해 주간 테마 플레이리스트에 참여하고 우승자를 발표하세요
+                </CardDescription>
+              </CardHeader>
+            </Card>
 
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-lg">
-                <Heart className="w-6 h-6 text-primary-500" />
-                음악 DNA
-              </CardTitle>
-              <CardDescription className="text-base">
-                개인의 음악 취향을 시각화하고 통계를 통해 음악 정체성을 파악하세요
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-lg">
+                  <Heart className="w-6 h-6 text-primary-500" />
+                  음악 DNA
+                </CardTitle>
+                <CardDescription className="text-base">
+                  개인의 음악 취향을 시각화하고 통계를 통해 음악 정체성을 파악하세요
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
 
         {/* 인증 상태 */}
         <div className="max-w-md mx-auto">
@@ -110,11 +111,13 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <Button className="w-full" size="lg" onClick={signInWithGoogle}>
-                Google로 시작하기
-              </Button>
+              <Link href="/auth/spotify">
+                <Button className="w-full" size="lg">
+                  Spotify로 시작하기
+                </Button>
+              </Link>
               <p className="text-center text-sm text-gray-500">
-                Spotify 계정 연결이 필요합니다
+                Spotify 계정으로 로그인하여 음악을 공유하세요
               </p>
             </div>
           )}
@@ -123,11 +126,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-// Wave 아이콘 컴포넌트 (lucide-react에 없으므로 임시로 생성)
-const Wave: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
