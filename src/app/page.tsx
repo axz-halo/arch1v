@@ -93,6 +93,9 @@ export default function HomePage() {
                 <div className="text-center">
                   <p className="text-green-600 mb-4">✅ Spotify 연결 완료!</p>
                   <p className="text-sm text-surface-600 mb-4">이제 앱의 모든 기능을 사용할 수 있습니다.</p>
+                  <Link href="/onboarding">
+                    <Button className="w-full" size="lg">계정 설정하기</Button>
+                  </Link>
                 </div>
               )}
               <Button className="w-full" size="md" variant="ghost" onClick={signOutApp}>로그아웃</Button>

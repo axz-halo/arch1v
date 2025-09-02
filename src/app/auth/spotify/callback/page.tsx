@@ -48,7 +48,7 @@ function SpotifyCallbackContent() {
           },
         });
         setSuccess(true);
-        setTimeout(() => router.push('/'), 1200);
+        setTimeout(() => router.push('/onboarding'), 1200);
       } catch (e: unknown) {
         const errorMessage = e instanceof Error ? e.message : 'Unknown error';
         setError(errorMessage);
