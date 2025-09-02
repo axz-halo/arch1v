@@ -110,14 +110,38 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-4">
-              <Link href="/auth/spotify">
-                <Button className="w-full" size="lg">
-                  Spotify로 시작하기
-                </Button>
-              </Link>
-              <p className="text-center text-sm text-gray-500">
-                Spotify 계정으로 로그인하여 음악을 공유하세요
-              </p>
+              {process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ? (
+                <>
+                  <Link href="/auth/spotify">
+                    <Button className="w-full" size="lg">
+                      Spotify로 시작하기
+                    </Button>
+                  </Link>
+                  <p className="text-center text-sm text-gray-500">
+                    Spotify 계정으로 로그인하여 음악을 공유하세요
+                  </p>
+                </>
+              ) : (
+                <div className="space-y-4">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">!</span>
+                      </div>
+                      <h3 className="font-semibold text-yellow-900">설정 필요</h3>
+                    </div>
+                    <p className="text-sm text-yellow-800 mb-3">
+                      Spotify API 설정이 필요합니다. 환경 변수를 확인해주세요.
+                    </p>
+                    <div className="text-xs text-yellow-700 bg-yellow-100 p-2 rounded">
+                      <code>NEXT_PUBLIC_SPOTIFY_CLIENT_ID</code>가 설정되지 않았습니다.
+                    </div>
+                  </div>
+                  <Button className="w-full" size="lg" disabled>
+                    Spotify로 시작하기 (설정 필요)
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>

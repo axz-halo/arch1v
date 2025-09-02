@@ -21,6 +21,11 @@ function getRedirectUri(): string {
 // Spotify OAuth URL 생성
 export function getSpotifyAuthorizeUrl() {
   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+  
+  if (!clientId) {
+    throw new Error('Spotify Client ID가 설정되지 않았습니다. 환경 변수를 확인해주세요.');
+  }
+  
   const redirectUri = getRedirectUri();
   const scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative streaming';
   

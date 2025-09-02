@@ -30,10 +30,12 @@ https://your-domain.com/auth/spotify/callback
 ## 3. 환경 변수 설정
 
 ### .env.local 파일 생성
+프로젝트 루트에 `.env.local` 파일을 생성하고 다음 내용을 추가하세요:
+
 ```bash
 # Spotify API Credentials
-NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_client_id_here
-SPOTIFY_CLIENT_SECRET=your_client_secret_here
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=6936931bedbe49d8ae448889cf49520a
+SPOTIFY_CLIENT_SECRET=bde690fe9a3a451999caf002fffd98d9
 
 # Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
@@ -43,6 +45,11 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
+
+**중요**: 
+- Spotify Client ID와 Secret은 이미 제공된 값입니다
+- Firebase 설정은 Google Cloud Console에서 확인하세요
+- `.env.local` 파일은 Git에 커밋되지 않습니다
 
 ## 4. 보안 요구사항
 
