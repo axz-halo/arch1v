@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Station, Track } from '@/types';
 import { formatTime } from '@/lib/utils';
-import { X, Play, Pause, SkipForward, SkipBack, Volume2, Heart, Share2 } from 'lucide-react';
+import { X, Play, Pause, SkipForward, SkipBack, Heart, Share2 } from 'lucide-react';
 import Image from 'next/image';
 
 interface StationModalProps {
@@ -120,7 +120,7 @@ const StationModal: React.FC<StationModalProps> = ({
       <h3 className="font-semibold text-surface-900 mb-4">대기열</h3>
       {station.queue.length > 0 ? (
         <div className="space-y-3">
-          {station.queue.map((track, index) => (
+          {station.queue.map((track) => (
             <div key={track.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-50 transition-colors">
               <Image
                 src={track.albumArt}

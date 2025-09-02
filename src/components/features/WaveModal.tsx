@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wave, Comment } from '@/types';
+import { Wave } from '@/types';
 import { formatRelativeTime } from '@/lib/utils';
-import { X, Play, Pause, Heart, MessageCircle, Send } from 'lucide-react';
+import { X, Play, Pause, Heart, Send } from 'lucide-react';
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
 
 interface WaveModalProps {
   wave: Wave | null;
@@ -24,7 +23,7 @@ const WaveModal: React.FC<WaveModalProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [commentText, setCommentText] = useState('');
-  const [previewTime, setPreviewTime] = useState(0);
+
 
   if (!isOpen || !wave) return null;
 
@@ -40,7 +39,7 @@ const WaveModal: React.FC<WaveModalProps> = ({
     }
   };
 
-  const reactionCount = wave.reactions.length;
+
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">

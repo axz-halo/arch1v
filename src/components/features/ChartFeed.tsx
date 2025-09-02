@@ -156,7 +156,7 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onTrackPlay }) => {
       <div className="grid gap-4 md:grid-cols-2">
         {mockCharts
           .filter(chart => chart.winner)
-          .map((chart, index) => (
+          .map((chart) => (
             <div key={chart.id} className="p-4 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl border border-yellow-200">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">

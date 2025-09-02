@@ -19,7 +19,6 @@ interface WaveCardProps {
 const WaveCard: React.FC<WaveCardProps> = ({
   wave,
   onWaveSelect,
-  onUserSelect,
   onReaction,
   onComment,
   onShare,

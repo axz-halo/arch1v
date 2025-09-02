@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import BottomNavigation from './BottomNavigation';
 import WaveFeed from '@/components/features/WaveFeed';
 import WaveModal from '@/components/features/WaveModal';
 import StationFeed from '@/components/features/StationFeed';
 import StationModal from '@/components/features/StationModal';
 import ChartFeed from '@/components/features/ChartFeed';
-import { TabType, Wave, User, Station, ChartTrack } from '@/types';
+import { TabType, Wave, User, Station } from '@/types';
 import { Search, Play, SkipBack, SkipForward } from 'lucide-react';
 
 interface MainLayoutProps {
