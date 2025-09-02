@@ -1,12 +1,43 @@
 // Spotify API 관련 유틸리티 함수들
 
+// 환경에 따른 Redirect URI 결정
+function getRedirectUri(): string {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isLocalhost = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' || 
+     window.location.hostname === '[::1]');
+  
+  if (isDevelopment && isLocalhost) {
+    // 개발 환경에서는 127.0.0.1 사용 (localhost 대신)
+    const port = window.location.port || '3000';
+    return `http://127.0.0.1:${port}/auth/spotify/callback`;
+  }
+  
+  // 프로덕션 환경에서는 HTTPS 사용
+  return `${window.location.origin}/auth/spotify/callback`;
+}
+
 // Spotify OAuth URL 생성
 export function getSpotifyAuthorizeUrl() {
   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-  const redirectUri = `${window.location.origin}/auth/spotify/callback`;
+  const redirectUri = getRedirectUri();
   const scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative streaming';
   
-  return `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&show_dialog=true`;
+  // state 파라미터 추가 (CSRF 공격 방지)
+  const state = generateRandomString(16);
+  
+  return `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}&show_dialog=true`;
+}
+
+// 랜덤 문자열 생성 (state 파라미터용)
+function generateRandomString(length: number): string {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let text = '';
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
 }
 
 // Spotify URI 스킴 처리

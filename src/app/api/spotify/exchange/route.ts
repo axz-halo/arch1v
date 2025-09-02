@@ -1,47 +1,84 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { code, redirectUri } = await req.json();
-    if (!code) return NextResponse.json({ error: 'Missing code' }, { status: 400 });
+    const { code, state } = await request.json();
 
-    const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-    const redirect_uri = redirectUri || process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
-
-    if (!clientId || !clientSecret || !redirect_uri) {
-      return NextResponse.json({ error: 'Spotify env not configured' }, { status: 500 });
+    if (!code) {
+      return NextResponse.json(
+        { error: 'Authorization code is required' },
+        { status: 400 }
+      );
     }
 
-    const basic = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    if (!state) {
+      return NextResponse.json(
+        { error: 'State parameter is required for security validation' },
+        { status: 400 }
+      );
+    }
 
-    const tokenRes = await fetch('https://accounts.spotify.com/api/token', {
+    const clientId = process.env.SPOTIFY_CLIENT_ID;
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
+    if (!clientId || !clientSecret) {
+      return NextResponse.json(
+        { error: 'Spotify credentials not configured' },
+        { status: 500 }
+      );
+    }
+
+    // 환경에 따른 Redirect URI 결정
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const host = request.headers.get('host') || '';
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
+    
+    let redirectUri: string;
+    if (isDevelopment && (host.includes('localhost') || host.includes('127.0.0.1'))) {
+      // 개발 환경에서는 127.0.0.1 사용 (localhost 대신)
+      const port = host.split(':')[1] || '3000';
+      redirectUri = `http://127.0.0.1:${port}/auth/spotify/callback`;
+    } else {
+      // 프로덕션 환경에서는 HTTPS 사용
+      redirectUri = `${protocol}://${host}/auth/spotify/callback`;
+    }
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `Basic ${basic}`,
+        'Authorization': `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
-        code,
-        redirect_uri,
+        code: code,
+        redirect_uri: redirectUri,
       }),
     });
 
-    const data = await tokenRes.json();
-    if (!tokenRes.ok) {
-      return NextResponse.json({ error: data.error_description || 'Exchange failed' }, { status: tokenRes.status });
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Spotify token exchange error:', errorData);
+      return NextResponse.json(
+        { error: 'Failed to exchange token' },
+        { status: response.status }
+      );
     }
+
+    const data = await response.json();
 
     return NextResponse.json({
       access_token: data.access_token,
-      refresh_token: data.refresh_token,
+      token_type: data.token_type,
       expires_in: data.expires_in,
       scope: data.scope,
-      token_type: data.token_type,
+      refresh_token: data.refresh_token,
     });
-  } catch (e: unknown) {
-    const errorMessage = e instanceof Error ? e.message : 'Unknown error';
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } catch (error) {
+    console.error('Token exchange error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

@@ -40,6 +40,7 @@ function SpotifyCallbackContent() {
 
   useEffect(() => {
     const code = params.get('code');
+    const state = params.get('state');
     const err = params.get('error');
     
     if (err) {
@@ -52,13 +53,19 @@ function SpotifyCallbackContent() {
       return;
     }
 
+    // state 파라미터 검증 (CSRF 공격 방지)
+    if (!state) {
+      setError('보안 검증에 실패했습니다. state 파라미터가 없습니다.');
+      return;
+    }
+
     const run = async () => {
       try {
         // Spotify 토큰 교환
         const res = await fetch('/api/spotify/exchange', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ code, state }),
         });
         
         const data = await res.json();
