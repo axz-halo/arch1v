@@ -8,7 +8,7 @@ import WaveModal from '@/components/features/WaveModal';
 import StationFeed from '@/components/features/StationFeed';
 import StationModal from '@/components/features/StationModal';
 import ChartFeed from '@/components/features/ChartFeed';
-import { TabType, Wave, User, Station } from '@/types';
+import { TabType, Wave, Station } from '@/types';
 import { Search, Play, SkipBack, SkipForward } from 'lucide-react';
 
 interface MainLayoutProps {
@@ -33,10 +33,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     setIsWaveModalOpen(true);
   };
 
-  const handleUserSelect = (user: User) => {
-    // 실제로는 사용자 프로필 페이지로 이동
-    console.log('User selected:', user.displayName);
-  };
+
 
   const handleStationSelect = (station: Station) => {
     setSelectedStation(station);
@@ -84,7 +81,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
               <h2 className="text-xl font-medium text-gray-900">음악 파도타기</h2>
               <WaveFeed 
                 onWaveSelect={handleWaveSelect}
-                onUserSelect={handleUserSelect}
               />
             </div>
           </div>

@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { db } from '@/lib/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import Button from '@/components/ui/Button';
 
-export default function SpotifyCallbackPage() {
+function SpotifyCallbackContent() {
   const params = useSearchParams();
   const router = useRouter();
   const { user } = useAuth();
@@ -75,5 +75,13 @@ export default function SpotifyCallbackPage() {
         <p>Spotify 연결 처리 중...</p>
       )}
     </div>
+  );
+}
+
+export default function SpotifyCallbackPage() {
+  return (
+    <Suspense fallback={<div className="p-6">로딩 중...</div>}>
+      <SpotifyCallbackContent />
+    </Suspense>
   );
 }

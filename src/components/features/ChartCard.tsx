@@ -37,12 +37,10 @@ const ChartCard: React.FC<ChartCardProps> = ({
     
     // 드래그 임계값에 도달하면 자동 투표
     if (offset > 100) {
-      setIsVoting(true);
       onVote(track.id, 'like');
       setIsDragging(false);
       setDragOffset(0);
     } else if (offset < -100) {
-      setIsVoting(true);
       onVote(track.id, 'dislike');
       setIsDragging(false);
       setDragOffset(0);

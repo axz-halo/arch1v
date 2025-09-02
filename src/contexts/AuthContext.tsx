@@ -31,6 +31,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(firebaseUser);
 
       if (firebaseUser) {
+        if (!db) {
+          console.error('Firebase database not initialized');
+          setLoading(false);
+          return;
+        }
         const userRef = doc(db, 'users', firebaseUser.uid);
         const snap = await getDoc(userRef);
 
@@ -75,10 +80,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithGoogleHandler = async () => {
+    if (!auth || !googleProvider) {
+      console.error('Firebase auth not initialized');
+      return;
+    }
     await signInWithPopup(auth, googleProvider);
   };
 
   const signOutHandler = async () => {
+    if (!auth) {
+      console.error('Firebase auth not initialized');
+      return;
+    }
     await signOut(auth);
   };
 

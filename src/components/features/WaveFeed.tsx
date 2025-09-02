@@ -1,18 +1,16 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Wave, User } from '@/types';
+import { Wave } from '@/types';
 import { mockWaves, generateMoreWaves } from '@/lib/mockData';
 import WaveCard from './WaveCard';
 
 interface WaveFeedProps {
   onWaveSelect?: (wave: Wave) => void;
-  onUserSelect?: (user: User) => void;
 }
 
 const WaveFeed: React.FC<WaveFeedProps> = ({
   onWaveSelect,
-  onUserSelect,
 }) => {
   const [waves, setWaves] = useState<Wave[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,7 +57,6 @@ const WaveFeed: React.FC<WaveFeedProps> = ({
           key={wave.id}
           wave={wave}
           onWaveSelect={onWaveSelect}
-          onUserSelect={onUserSelect}
           onReaction={handleReaction}
           onComment={handleComment}
           onShare={handleShare}

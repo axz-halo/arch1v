@@ -115,7 +115,7 @@ const WaveModal: React.FC<WaveModalProps> = ({
                 <div className="w-full bg-surface-200 rounded-full h-1 mt-4">
                   <div 
                     className="bg-primary-500 h-1 rounded-full transition-all duration-1000"
-                    style={{ width: `${(previewTime / 30) * 100}%` }}
+                    style={{ width: '50%' }}
                   ></div>
                 </div>
               )}
