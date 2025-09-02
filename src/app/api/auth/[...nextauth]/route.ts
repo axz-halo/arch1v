@@ -4,8 +4,8 @@ import SpotifyProvider from 'next-auth/providers/spotify';
 const handler = NextAuth({
   providers: [
     SpotifyProvider({
-      clientId: process.env.SPOTIFY_CLIENT_ID!,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
+      clientId: process.env.SPOTIFY_CLIENT_ID || '',
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
       authorization: {
         params: {
           scope: [
@@ -64,12 +64,19 @@ const handler = NextAuth({
 
 async function refreshAccessToken(token: any) {
   try {
+    const clientId = process.env.SPOTIFY_CLIENT_ID;
+    const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+    
+    if (!clientId || !clientSecret) {
+      throw new Error('Spotify credentials not configured');
+    }
+    
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': `Basic ${Buffer.from(
-          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
+          `${clientId}:${clientSecret}`
         ).toString('base64')}`
       },
       body: new URLSearchParams({
