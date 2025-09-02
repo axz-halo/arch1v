@@ -5,12 +5,12 @@ import { doc, getDoc, updateDoc, arrayUnion, increment } from 'firebase/firestor
 // 차트 투표
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { chartId } = params;
+    const { id: chartId } = await params;
     const body = await request.json();
-    const { trackId, vote, userId } = body; // vote: 'like' | 'dislike'
+    const { trackId, userId } = body;
 
     if (!db) {
       return NextResponse.json({ error: 'Database not initialized' }, { status: 500 });
@@ -25,7 +25,7 @@ export async function POST(
 
     const chartData = chartDoc.data();
     const tracks = chartData.tracks || [];
-    const trackIndex = tracks.findIndex((track: any) => track.id === trackId);
+    const trackIndex = tracks.findIndex((track: { id: string }) => track.id === trackId);
 
     if (trackIndex === -1) {
       return NextResponse.json({ error: 'Track not found in chart' }, { status: 404 });

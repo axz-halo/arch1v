@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, query, where, orderBy, limit, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { getServerSession } from 'next-auth';
+import { collection, addDoc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 
 // 스테이션 생성
 export async function POST(request: NextRequest) {

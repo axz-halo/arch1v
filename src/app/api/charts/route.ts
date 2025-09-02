@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, query, where, orderBy, limit, doc, updateDoc, deleteDoc, increment } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 
 // 차트 생성
 export async function POST(request: NextRequest) {

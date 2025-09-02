@@ -238,7 +238,7 @@ export interface FirestoreSchemas {
         stationId?: string;
         chartId?: string;
         userId?: string;
-        [key: string]: any;
+        [key: string]: unknown;
       };
       isRead: boolean;
       createdAt: Date;

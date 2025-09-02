@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { Music, Spotify, User, Check, ArrowRight, SkipForward } from 'lucide-react';
+import { Music, User, Check, ArrowRight, SkipForward } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function OnboardingPage() {
     if (profile?.displayName) {
       setDisplayName(profile.displayName);
     }
-    if (profile?.spotifyConnected) {
+    if ((profile as { spotifyConnected?: boolean })?.spotifyConnected) {
       setSpotifyConnected(true);
     }
   }, [user, profile, router]);
@@ -78,7 +78,7 @@ export default function OnboardingPage() {
       id: 3,
       title: 'Spotify 연동',
       subtitle: 'Spotify 계정을 연동하여 음악 취향을 분석하고 공유하세요',
-      icon: <Spotify className="w-8 h-8" />,
+      icon: <Music className="w-8 h-8" />,
     },
   ];
 
@@ -162,7 +162,7 @@ export default function OnboardingPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                    <Spotify className="w-6 h-6 text-white" />
+                    <Music className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Spotify</h3>
@@ -261,7 +261,7 @@ export default function OnboardingPage() {
           <div className="flex gap-3">
             {currentStep > 1 && (
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={() => setCurrentStep(currentStep - 1)}
               >
                 이전

@@ -7,7 +7,7 @@ import MainLayout from '@/components/layout/MainLayout';
 
 export default function AppPage() {
   const router = useRouter();
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (!loading && !user) {
