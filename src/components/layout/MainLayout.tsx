@@ -14,11 +14,13 @@ import { Search, Play, SkipBack, SkipForward } from 'lucide-react';
 interface MainLayoutProps {
   initialTab?: TabType;
   showTabs?: boolean;
+  children?: React.ReactNode;
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ 
   initialTab = 'wave', 
-  showTabs = true 
+  showTabs = true,
+  children 
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [selectedWave, setSelectedWave] = useState<Wave | null>(null);
@@ -146,7 +148,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
       {/* Main Content */}
       <main className="main-content">
-        {renderTabContent()}
+        {children || renderTabContent()}
       </main>
 
       {/* Tab Navigation */}
