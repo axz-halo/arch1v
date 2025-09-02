@@ -1,6 +1,15 @@
-# Spotify API 설정 가이드
+# Spotify API 설정 가이드 (NextAuth.js)
 
-이 문서는 Spotify API를 사용하기 위한 앱 설정 방법을 설명합니다.
+이 문서는 NextAuth.js를 사용하여 Spotify API를 통합하는 방법을 설명합니다.
+
+## 🚀 NextAuth.js의 장점
+
+- **표준화된 인증**: 업계 표준 OAuth 2.0 구현
+- **자동 토큰 관리**: 액세스 토큰 자동 갱신
+- **보안**: CSRF 보호, 세션 관리, 암호화
+- **타입 안전성**: TypeScript 완전 지원
+- **확장성**: 다양한 프로바이더 지원
+- **세션 관리**: JWT 및 데이터베이스 세션 지원
 
 ## 1. Spotify Developer Dashboard에서 앱 생성
 
@@ -17,15 +26,15 @@
 
 ### 개발 환경
 ```
-http://127.0.0.1:3000/auth/spotify/callback
+http://127.0.0.1:3000/api/auth/callback/spotify
 ```
 
 ### 프로덕션 환경
 ```
-https://your-domain.com/auth/spotify/callback
+https://arch1v.vercel.app/api/auth/callback/spotify
 ```
 
-**중요**: `localhost`는 허용되지 않으므로 반드시 `127.0.0.1`을 사용해야 합니다.
+**중요**: NextAuth.js를 사용하므로 `/api/auth/callback/spotify` 경로를 사용합니다.
 
 ## 3. 환경 변수 설정
 
@@ -35,7 +44,12 @@ https://your-domain.com/auth/spotify/callback
 ```bash
 # Spotify API Credentials
 NEXT_PUBLIC_SPOTIFY_CLIENT_ID=6936931bedbe49d8ae448889cf49520a
+SPOTIFY_CLIENT_ID=6936931bedbe49d8ae448889cf49520a
 SPOTIFY_CLIENT_SECRET=bde690fe9a3a451999caf002fffd98d9
+
+# NextAuth.js Configuration
+NEXTAUTH_SECRET=your_nextauth_secret_here
+NEXTAUTH_URL=https://arch1v.vercel.app
 
 # Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
@@ -48,6 +62,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 **중요**: 
 - Spotify Client ID와 Secret은 이미 제공된 값입니다
+- NextAuth.js를 사용하므로 `NEXTAUTH_SECRET`과 `NEXTAUTH_URL`이 필요합니다
 - Firebase 설정은 Google Cloud Console에서 확인하세요
 - `.env.local` 파일은 Git에 커밋되지 않습니다
 

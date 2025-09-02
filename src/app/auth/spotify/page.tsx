@@ -5,23 +5,37 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Music, ArrowRight, AlertCircle } from 'lucide-react';
 import Button from '@/components/ui/Button';
-import { getSpotifyAuthorizeUrl } from '@/lib/spotify';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function SpotifyAuthPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // 이미 로그인된 경우 온보딩으로 리다이렉트
+  React.useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/onboarding');
+    }
+  }, [status, router]);
 
   const handleSpotifyLogin = () => {
-    try {
-      const authUrl = getSpotifyAuthorizeUrl();
-      window.location.href = authUrl;
-    } catch (error) {
-      console.error('Spotify login error:', error);
-      alert('Spotify 로그인 중 오류가 발생했습니다. 환경 변수를 확인해주세요.');
-    }
+    signIn('spotify', { callbackUrl: '/onboarding' });
   };
 
   // 환경 변수 확인
   const hasSpotifyConfig = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </div>
+    );
+  }
+
+  if (status === 'authenticated') {
+    return null; // 리다이렉트 중
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">

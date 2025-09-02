@@ -5,10 +5,12 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/Ca
 import Button from '@/components/ui/Button';
 import { Music, Radio, TrendingUp, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function HomePage() {
   const { user, profile, loading, signOutApp } = useAuth();
+  const { data: session, status } = useSession();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -80,31 +82,30 @@ export default function HomePage() {
 
         {/* 인증 상태 */}
         <div className="max-w-md mx-auto">
-          {loading ? (
+          {status === 'loading' || loading ? (
             <Button className="w-full" size="lg" disabled>로딩 중...</Button>
-          ) : user ? (
+          ) : session ? (
             <div className="space-y-4">
               <div className="text-center">
                 <div className="text-lg font-medium text-gray-900 mb-2">
-                  반가워요, {profile?.displayName || user.email} 님
+                  반가워요, {session.spotifyProfile?.display_name || session.user?.email} 님
                 </div>
-                {!((profile as { spotifyConnected?: boolean })?.spotifyConnected) ? (
-                  <Link href="/auth/spotify">
-                    <Button className="w-full" size="lg">Spotify 계정 연결</Button>
-                  </Link>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <p className="text-green-600 mb-4 text-lg">✅ Spotify 연결 완료!</p>
-                      <p className="text-sm text-gray-600 mb-4">이제 앱의 모든 기능을 사용할 수 있습니다.</p>
-                      <Link href="/onboarding">
-                        <Button className="w-full" size="lg">계정 설정하기</Button>
-                      </Link>
-                    </div>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <p className="text-green-600 mb-4 text-lg">✅ Spotify 연결 완료!</p>
+                    <p className="text-sm text-gray-600 mb-4">이제 앱의 모든 기능을 사용할 수 있습니다.</p>
+                    <Link href="/onboarding">
+                      <Button className="w-full" size="lg">계정 설정하기</Button>
+                    </Link>
                   </div>
-                )}
+                </div>
               </div>
-              <Button className="w-full" size="md" variant="ghost" onClick={signOutApp}>
+              <Button 
+                className="w-full" 
+                size="md" 
+                variant="ghost" 
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
                 로그아웃
               </Button>
             </div>
@@ -112,11 +113,14 @@ export default function HomePage() {
             <div className="space-y-4">
               {process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID ? (
                 <>
-                  <Link href="/auth/spotify">
-                    <Button className="w-full" size="lg">
-                      Spotify로 시작하기
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full" 
+                    size="lg"
+                    onClick={() => signIn('spotify', { callbackUrl: '/onboarding' })}
+                  >
+                    <Music className="w-5 h-5 mr-2" />
+                    Spotify로 시작하기
+                  </Button>
                   <p className="text-center text-sm text-gray-500">
                     Spotify 계정으로 로그인하여 음악을 공유하세요
                   </p>

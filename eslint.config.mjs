@@ -20,4 +20,7 @@ export default [
       '@next/next/no-img-element': 'warn',
     },
   },
+  {
+    ignores: ['node_modules/**', '.next/**', 'dist/**'],
+  },
 ];
