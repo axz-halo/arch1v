@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Chart, ChartTrack } from '@/types';
 import { mockCharts } from '@/lib/mockData';
 import ChartCard from './ChartCard';
-import { Trophy, Calendar, Users, Play, Gift, Clock, Music } from 'lucide-react';
+import { Trophy, Gift, Music } from 'lucide-react';
 
 interface ChartFeedProps {
   onTrackPlay?: (track: ChartTrack) => void;

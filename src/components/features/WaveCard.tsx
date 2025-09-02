@@ -9,7 +9,7 @@ import Image from 'next/image';
 interface WaveCardProps {
   wave: Wave;
   onWaveSelect?: (wave: Wave) => void;
-  onUserSelect?: (user: any) => void;
+  onUserSelect?: (user: { id: string; displayName: string; avatar?: string }) => void;
   onReaction?: (waveId: string, type: 'like' | 'love' | 'fire') => void;
   onComment?: (waveId: string) => void;
   onShare?: (waveId: string) => void;

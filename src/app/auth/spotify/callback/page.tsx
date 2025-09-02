@@ -48,8 +48,9 @@ export default function SpotifyCallbackPage() {
         });
         setSuccess(true);
         setTimeout(() => router.push('/'), 1200);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : 'Unknown error';
+        setError(errorMessage);
       }
     };
 

@@ -118,12 +118,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       {/* Header */}
       <header className="header">
         <div className="header-content">
-          <a href="/" className="logo">
+          <Link href="/" className="logo">
             <div className="logo-icon">
               <span className="text-sm font-bold">A</span>
             </div>
             <span>Arch1v</span>
-          </a>
+          </Link>
           
           <div className="search-container">
             <div className="relative">

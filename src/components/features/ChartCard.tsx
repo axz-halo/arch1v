@@ -20,7 +20,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [startX, setStartX] = useState(0);
-  const [isVoting, setIsVoting] = useState(false);
+
 
   const handleDragStart = (e: React.MouseEvent) => {
     setIsDragging(true);

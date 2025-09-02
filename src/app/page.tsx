@@ -7,11 +7,10 @@ import Button from '@/components/ui/Button';
 import { Music, Radio, TrendingUp, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+
 
 export default function HomePage() {
   const { user, profile, loading, signInWithGoogle, signOutApp } = useAuth();
-  const router = useRouter();
 
   return (
     <MainLayout showTabs={true}>
@@ -86,7 +85,7 @@ export default function HomePage() {
           ) : user ? (
             <div className="space-y-3">
               <div className="text-sm text-surface-600">반가워요, {profile?.displayName || user.email} 님</div>
-              {!((profile as any)?.spotifyConnected) ? (
+              {!((profile as { spotifyConnected?: boolean })?.spotifyConnected) ? (
                 <Link href="/auth/spotify">
                   <Button className="w-full" size="lg">Spotify 계정 연결</Button>
                 </Link>
