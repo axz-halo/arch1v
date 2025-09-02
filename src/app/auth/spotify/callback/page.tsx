@@ -7,13 +7,36 @@ import { db } from '@/lib/firebase';
 import Button from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Music, Check, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
+
+interface UserData {
+  id: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  spotifyId: string;
+  spotifyConnected: boolean;
+  spotify: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+    tokenType: string;
+    scope: string;
+    connectedAt: Date;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  followers: number;
+  following: number;
+  waveCount: number;
+}
 
 function SpotifyCallbackContent() {
   const params = useSearchParams();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     const code = params.get('code');
@@ -58,12 +81,13 @@ function SpotifyCallbackContent() {
         const userRef = doc(db, 'users', userId);
         
         const userDoc = await getDoc(userRef);
-        let userInfo;
+        let userInfo: UserData;
         
         if (userDoc.exists()) {
           // 기존 사용자 업데이트
+          const existingData = userDoc.data();
           userInfo = {
-            ...userDoc.data(),
+            ...existingData,
             spotifyConnected: true,
             spotify: {
               accessToken: data.access_token,
@@ -74,7 +98,7 @@ function SpotifyCallbackContent() {
               connectedAt: new Date(),
             },
             updatedAt: new Date(),
-          };
+          } as UserData;
         } else {
           // 새 사용자 생성
           userInfo = {
@@ -166,10 +190,12 @@ function SpotifyCallbackContent() {
             <div className="bg-green-50 border border-green-200 rounded-xl p-4">
               <div className="flex items-center gap-3">
                 {userData?.photoURL && (
-                  <img 
+                  <Image 
                     src={userData.photoURL} 
                     alt="Profile" 
-                    className="w-12 h-12 rounded-full"
+                    width={48}
+                    height={48}
+                    className="rounded-full"
                   />
                 )}
                 <div>

@@ -4,7 +4,7 @@
 export function getSpotifyAuthorizeUrl() {
   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
   const redirectUri = `${window.location.origin}/auth/spotify/callback`;
-  const scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative';
+  const scope = 'user-read-private user-read-email user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played user-top-read playlist-read-private playlist-read-collaborative streaming';
   
   return `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&show_dialog=true`;
 }
@@ -95,6 +95,46 @@ export async function getSpotifyPlaylists(accessToken: string) {
   }
 }
 
+// 사용자 최근 재생 트랙 가져오기
+export async function getRecentlyPlayed(accessToken: string, limit: number = 20) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch recently played');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching recently played:', error);
+    return null;
+  }
+}
+
+// 사용자 상위 트랙 가져오기
+export async function getTopTracks(accessToken: string, timeRange: 'short_term' | 'medium_term' | 'long_term' = 'medium_term', limit: number = 20) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=${limit}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch top tracks');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching top tracks:', error);
+    return null;
+  }
+}
+
 // 토큰 갱신
 export async function refreshSpotifyToken(refreshToken: string) {
   try {
@@ -133,4 +173,84 @@ export function getSpotifyUriType(uri: string): string | null {
 export function getSpotifyUriId(uri: string): string | null {
   const match = uri.match(/^spotify:(track|album|artist|playlist|user):([a-zA-Z0-9]+)$/);
   return match ? match[2] : null;
+}
+
+// 트랙 정보 가져오기
+export async function getTrackInfo(accessToken: string, trackId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch track info');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching track info:', error);
+    return null;
+  }
+}
+
+// 앨범 정보 가져오기
+export async function getAlbumInfo(accessToken: string, albumId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch album info');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching album info:', error);
+    return null;
+  }
+}
+
+// 아티스트 정보 가져오기
+export async function getArtistInfo(accessToken: string, artistId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch artist info');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching artist info:', error);
+    return null;
+  }
+}
+
+// 플레이리스트 정보 가져오기
+export async function getPlaylistInfo(accessToken: string, playlistId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch playlist info');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching playlist info:', error);
+    return null;
+  }
 }

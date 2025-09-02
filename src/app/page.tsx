@@ -28,56 +28,55 @@ export default function HomePage() {
         </div>
 
         {/* 기능 소개 */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-lg">
-                  <Music className="w-6 h-6 text-primary-500" />
-                  Wave 피드
-                </CardTitle>
-                <CardDescription className="text-base">
-                  실시간으로 듣고 있는 음악을 공유하고 다른 사용자들의 음악을 발견하세요
-                </CardDescription>
-              </CardHeader>
-            </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-lg">
+                <Music className="w-6 h-6 text-primary-500" />
+                Wave 피드
+              </CardTitle>
+              <CardDescription className="text-base">
+                실시간으로 듣고 있는 음악을 공유하고 다른 사용자들의 음악을 발견하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-lg">
-                  <Radio className="w-6 h-6 text-primary-500" />
-                  스테이션
-                </CardTitle>
-                <CardDescription className="text-base">
-                  플레이리스트를 구독하고 관리하여 나만의 음악 스테이션을 만들어보세요
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-lg">
+                <Radio className="w-6 h-6 text-primary-500" />
+                스테이션
+              </CardTitle>
+              <CardDescription className="text-base">
+                플레이리스트를 구독하고 관리하여 나만의 음악 스테이션을 만들어보세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-lg">
-                  <TrendingUp className="w-6 h-6 text-primary-500" />
-                  차트
-                </CardTitle>
-                <CardDescription className="text-base">
-                  커뮤니티 투표를 통해 주간 테마 플레이리스트에 참여하고 우승자를 발표하세요
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-lg">
+                <TrendingUp className="w-6 h-6 text-primary-500" />
+                차트
+              </CardTitle>
+              <CardDescription className="text-base">
+                커뮤니티 투표를 통해 주간 테마 플레이리스트에 참여하고 우승자를 발표하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-lg">
-                  <Heart className="w-6 h-6 text-primary-500" />
-                  음악 DNA
-                </CardTitle>
-                <CardDescription className="text-base">
-                  개인의 음악 취향을 시각화하고 통계를 통해 음악 정체성을 파악하세요
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3 text-lg">
+                <Heart className="w-6 h-6 text-primary-500" />
+                음악 DNA
+              </CardTitle>
+              <CardDescription className="text-base">
+                개인의 음악 취향을 시각화하고 통계를 통해 음악 정체성을 파악하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
 
         {/* 인증 상태 */}
         <div className="max-w-md mx-auto">

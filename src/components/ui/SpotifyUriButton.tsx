@@ -8,7 +8,7 @@ import Button from './Button';
 interface SpotifyUriButtonProps {
   uri: string;
   children?: React.ReactNode;
-  variant?: 'default' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -16,7 +16,7 @@ interface SpotifyUriButtonProps {
 const SpotifyUriButton: React.FC<SpotifyUriButtonProps> = ({
   uri,
   children,
-  variant = 'default',
+  variant = 'primary',
   size = 'md',
   className = '',
 }) => {

@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Chart } from '@/types';
 import { mockCharts } from '@/lib/mockData';
 import ChartCard from './ChartCard';
-import { Filter, Search, TrendingUp, Calendar, Trophy, Users } from 'lucide-react';
+import { Search, TrendingUp, Users, Trophy, Calendar } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
@@ -33,10 +33,7 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
     });
   }, [selectedPeriod, searchQuery, showActiveOnly]);
 
-  const handleVote = (chart: Chart, trackId: string) => {
-    // 실제로는 투표 API 호출
-    console.log('Voting for track:', trackId, 'in chart:', chart.title);
-  };
+
 
   const handleCreateChart = () => {
     // 실제로는 새 차트 생성 모달 또는 페이지로 이동
@@ -207,7 +204,6 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
               <ChartCard
                 key={chart.id}
                 chart={chart}
-                onVote={handleVote}
                 onChartClick={onChartSelect}
                 viewMode={viewMode}
               />

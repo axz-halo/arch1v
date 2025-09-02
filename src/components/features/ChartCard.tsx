@@ -8,14 +8,12 @@ import { Card } from '@/components/ui/Card';
 
 interface ChartCardProps {
   chart: Chart;
-  onVote?: (chart: Chart, trackId: string) => void;
   onChartClick?: (chart: Chart) => void;
   viewMode?: 'grid' | 'list';
 }
 
 const ChartCard: React.FC<ChartCardProps> = ({
   chart,
-  onVote,
   onChartClick,
   viewMode = 'grid',
 }) => {

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User as FirebaseUser, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 
@@ -102,7 +102,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   const signOutApp = async () => {

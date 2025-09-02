@@ -31,14 +31,6 @@ const nextConfig = {
       },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        source: '/spotify/:path*',
-        destination: 'spotify://:path*',
-      },
-    ];
-  },
 }
 
 module.exports = nextConfig
