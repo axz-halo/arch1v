@@ -1,26 +1,660 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary (Orange) */
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #ff5500;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  
+  /* Surface grays for neumorphism */
+  --color-surface-50: #fafafa;
+  --color-surface-100: #f5f5f5;
+  --color-surface-200: #e5e5e5;
+  --color-surface-300: #d4d4d4;
+  --color-surface-400: #a3a3a3;
+  --color-surface-500: #737373;
+  --color-surface-600: #525252;
+  --color-surface-700: #404040;
+  --color-surface-800: #262626;
+  --color-surface-900: #171717;
+  
+  /* Vinyl colors */
+  --color-vinyl-black: #1a1a1a;
+  --color-vinyl-dark: #2d2d2d;
+  --color-vinyl-gray: #4a4a4a;
+  --color-vinyl-light: #f8f8f8;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@layer base {
+  * { @apply border-surface-200; }
+  body { @apply bg-surface-50 text-surface-900 font-sans antialiased; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  /* App Layout */
+  .app {
+    @apply min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20;
+  }
+  
+  /* Header */
+  .header {
+    @apply bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40;
+  }
+  
+  .header-content {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between;
+  }
+  
+  .logo {
+    @apply flex items-center gap-3 text-xl font-bold text-gray-900 no-underline;
+  }
+  
+  .logo-icon {
+    @apply w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white;
+  }
+  
+  .search-container {
+    @apply flex-1 max-w-md mx-8;
+  }
+  
+  .search-input {
+    @apply w-full bg-gray-100 border-0 rounded-xl py-3 pr-4 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all duration-200;
+  }
+  
+  .auth-buttons {
+    @apply flex items-center gap-3;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 text-gray-700 hover:bg-gray-100;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-500 text-white hover:bg-primary-600 shadow-lg hover:shadow-xl;
+  }
+  
+  /* Main Content */
+  .main-content {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24;
+  }
+  
+  /* Now Playing Radio */
+  .now-playing-radio {
+    @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mb-8;
+  }
+  
+  .signal-indicator {
+    @apply w-3 h-3 bg-green-500 rounded-full animate-pulse mb-4;
+  }
+  
+  .radio-display {
+    @apply text-center mb-6;
+  }
+  
+  .station-name {
+    @apply text-lg font-semibold text-gray-900 mb-1;
+  }
+  
+  .track-info {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .artist-info {
+    @apply text-xs text-gray-500;
+  }
+  
+  .playback-controls {
+    @apply flex items-center justify-center gap-4;
+  }
+  
+  .control-btn {
+    @apply p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700;
+  }
+  
+  .play-btn {
+    @apply bg-primary-500 text-white hover:bg-primary-600 shadow-lg;
+  }
+  
+  /* Wave Cards */
+  .wave-card {
+    @apply bg-white rounded-2xl p-4 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300;
+  }
+  
+  .wave-meta {
+    @apply flex items-center gap-4 mb-4;
+  }
+  
+  .album-art-lp {
+    @apply w-16 h-16 rounded-full overflow-hidden shadow-lg flex-shrink-0;
+  }
+  
+  .track-details {
+    @apply flex-1 min-w-0;
+  }
+  
+  .track-title {
+    @apply font-semibold text-gray-900 mb-1 truncate;
+  }
+  
+  .track-artist {
+    @apply text-sm text-gray-600 mb-1;
+  }
+  
+  .track-meta {
+    @apply text-xs text-gray-500;
+  }
+  
+  .wave-actions {
+    @apply flex items-center gap-2;
+  }
+  
+  .play-button {
+    @apply p-2 rounded-full bg-primary-500 text-white hover:bg-primary-600 transition-colors shadow-lg;
+  }
+  
+  .reaction-btn {
+    @apply flex items-center gap-1 px-3 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 text-sm;
+  }
+  
+  .reaction-btn.active {
+    @apply bg-red-100 text-red-600;
+  }
+  
+  /* Tab Navigation */
+  .tab-navigation {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50;
+  }
+  
+  .tab-container {
+    @apply max-w-4xl mx-auto px-4 py-2 flex items-center justify-around;
+  }
+  
+  .tab-item {
+    @apply flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all duration-200 text-gray-500 hover:text-gray-700 hover:bg-gray-100;
+  }
+  
+  .tab-item.active {
+    @apply text-primary-500 bg-primary-50;
+  }
+  
+  .tab-icon {
+    @apply w-6 h-6;
+  }
+  
+  .tab-label {
+    @apply text-xs font-medium;
+  }
+  
+  /* Station Cards */
+  .station-card {
+    @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200;
+  }
+  
+  .station-thumbnail {
+    @apply relative aspect-video;
+  }
+  
+  .station-overlay {
+    @apply absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-200 flex items-center justify-center;
+  }
+  
+  .station-info {
+    @apply p-4;
+  }
+  
+  .station-name {
+    @apply font-semibold text-gray-900 mb-2 line-clamp-2;
+  }
+  
+  .station-description {
+    @apply text-sm text-gray-600 mb-3 line-clamp-2;
+  }
+  
+  .station-stats {
+    @apply flex items-center justify-between text-xs text-gray-500;
+  }
+  
+  /* Chart Components */
+  .chart-card {
+    @apply relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden transition-all duration-500 ease-out;
+  }
+  
+  .chart-card:hover {
+    @apply shadow-xl transform scale-[1.02];
+  }
+  
+  .chart-card.dragging {
+    @apply cursor-grabbing;
+  }
+  
+  .chart-card:not(.dragging) {
+    @apply cursor-grab;
+  }
+  
+  .chart-card {
+    @apply transition-all duration-300 ease-out;
+  }
+  
+  .chart-header {
+    @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-200;
+  }
+  
+  .chart-stats {
+    @apply grid grid-cols-3 gap-4;
+  }
+  
+  .chart-stat-item {
+    @apply text-center;
+  }
+  
+  .chart-stat-icon {
+    @apply w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-2;
+  }
+  
+  .chart-progress {
+    @apply w-full bg-gray-200 rounded-full h-2;
+  }
+  
+  .chart-progress-bar {
+    @apply bg-primary-500 h-2 rounded-full transition-all duration-300;
+  }
+  
+  .chart-vote-buttons {
+    @apply absolute bottom-4 left-4 right-4 flex justify-between;
+  }
+  
+  .chart-vote-btn {
+    @apply w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors;
+  }
+  
+  .chart-vote-btn.like {
+    @apply hover:bg-green-50;
+  }
+  
+  .chart-vote-btn.dislike {
+    @apply hover:bg-red-50;
+  }
+  
+  .chart-vote-btn.play {
+    @apply bg-primary-500 hover:bg-primary-600;
+  }
+  
+  .chart-vote-btn.play svg {
+    @apply text-white;
+  }
+  
+  .chart-winner {
+    @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-200;
+  }
+  
+  .chart-winner-header {
+    @apply text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2;
+  }
+  
+  .chart-winner-content {
+    @apply flex items-center gap-4;
+  }
+  
+  .chart-winner-art {
+    @apply w-16 h-16 rounded-lg overflow-hidden;
+  }
+  
+  .chart-winner-info {
+    @apply flex-1;
+  }
+  
+  .chart-winner-title {
+    @apply font-semibold text-gray-900;
+  }
+  
+  .chart-winner-artist {
+    @apply text-gray-600;
+  }
+  
+  .chart-winner-meta {
+    @apply text-sm text-gray-500;
+  }
+  
+  .chart-winner-play {
+    @apply p-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors;
+  }
+  
+  /* New Chart Design Components */
+  .weekly-theme-header {
+    @apply px-6 py-4;
+  }
+  
+  .theme-background {
+    @apply bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden;
+  }
+  
+  .theme-background::before {
+    content: '';
+    @apply absolute inset-0 bg-black/20;
+  }
+  
+  .theme-content {
+    @apply relative z-10 text-center;
+  }
+  
+  .theme-emoji {
+    @apply text-4xl mb-4;
+  }
+  
+  .theme-title {
+    @apply text-3xl font-bold mb-3;
+  }
+  
+  .theme-description {
+    @apply text-lg text-gray-200 mb-6;
+  }
+  
+  .countdown-timer {
+    @apply mb-6;
+  }
+  
+  .timer-label {
+    @apply text-sm text-gray-300 mb-3;
+  }
+  
+  .timer-display {
+    @apply flex justify-center items-center gap-2;
+  }
+  
+  .timer-unit {
+    @apply text-center;
+  }
+  
+  .timer-number {
+    @apply block text-2xl font-bold bg-white/20 rounded-lg px-3 py-2 min-w-[3rem];
+  }
+  
+  .timer-label-small {
+    @apply block text-xs text-gray-300 mt-1;
+  }
+  
+  .timer-separator {
+    @apply text-2xl font-bold text-gray-300;
+  }
+  
+  .prize-pool {
+    @apply flex items-center justify-center gap-2 text-lg font-semibold mb-6;
+  }
+  
+  .submit-track-btn {
+    @apply bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 mx-auto;
+  }
+  
+  .voting-status {
+    @apply bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mx-6 mb-6;
+  }
+  
+  .status-item {
+    @apply flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0;
+  }
+  
+  .status-label {
+    @apply text-sm text-gray-600;
+  }
+  
+  .status-value {
+    @apply font-semibold text-gray-900;
+  }
+  
+  .chart-navigation {
+    @apply px-6;
+  }
+  
+  .voting-section {
+    @apply px-6;
+  }
+  
+  .voting-cards-container {
+    @apply relative max-w-md mx-auto;
+  }
+  
+  .card-header {
+    @apply flex justify-between items-center p-4;
+  }
+  
+  .rank-badge {
+    @apply flex items-center gap-1;
+  }
+  
+  .platform-badges {
+    @apply flex gap-2;
+  }
+  
+  .platform-badge {
+    @apply px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full;
+  }
+  
+  .card-artwork {
+    @apply relative aspect-square;
+  }
+  
+  .album-art-large {
+    @apply w-full h-full;
+  }
+  
+  .play-overlay {
+    @apply absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center;
+  }
+  
+  .play-overlay svg {
+    @apply text-white;
+  }
+  
+  .card-info {
+    @apply p-6;
+  }
+  
+  .track-title {
+    @apply text-2xl font-bold text-gray-900 mb-2;
+  }
+  
+  .track-artist {
+    @apply text-lg text-gray-600 mb-4;
+  }
+  
+  .submitter-info {
+    @apply flex items-center gap-3 mb-4;
+  }
+  
+  .submitter-avatar {
+    @apply flex-shrink-0;
+  }
+  
+  .submitter-details {
+    @apply flex flex-col;
+  }
+  
+  .submitter-name {
+    @apply font-medium text-gray-900;
+  }
+  
+  .submitter-level {
+    @apply text-sm text-gray-500;
+  }
+  
+  .submission-reason {
+    @apply text-gray-700 italic mb-4 p-4 bg-gray-50 rounded-lg border-l-4 border-primary-500;
+  }
+  
+  .submission-meta {
+    @apply flex justify-between items-center;
+  }
+  
+  .mood-tags-small {
+    @apply flex gap-2;
+  }
+  
+  .mood-tag-small {
+    @apply px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full;
+  }
+  
+  .submission-time {
+    @apply flex items-center gap-1 text-sm text-gray-500;
+  }
+  
+  .voting-stats {
+    @apply px-6 pb-4;
+  }
+  
+  .vote-count {
+    @apply flex items-center gap-2 mb-2;
+  }
+  
+  .vote-count span {
+    @apply font-semibold text-gray-900;
+  }
+  
+  .vote-animation {
+    @apply w-full h-1 bg-gray-200 rounded-full overflow-hidden;
+  }
+  
+  .vote-progress {
+    @apply h-full bg-gradient-to-r from-green-400 to-green-600 transition-all duration-500;
+  }
+  
+  .card-actions {
+    @apply flex justify-center gap-4 p-6;
+  }
+  
+  .vote-btn {
+    @apply w-16 h-16 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110;
+  }
+  
+  .vote-btn.vote-down {
+    @apply bg-red-500 hover:bg-red-600 text-white;
+  }
+  
+  .vote-btn.vote-up {
+    @apply bg-green-500 hover:bg-green-600 text-white;
+  }
+  
+  .vote-btn:disabled {
+    @apply opacity-50 cursor-not-allowed hover:scale-100;
+  }
+  
+  /* Utility Classes */
+  .neumorphism { @apply bg-surface-100 shadow-lg; }
+  .neumorphism-inset { @apply bg-surface-100 shadow-inner; }
+  .neumorphism-dark { @apply bg-surface-800 shadow-lg; }
+  .neumorphism-dark-inset { @apply bg-surface-800 shadow-inner; }
+  .vinyl-card { @apply bg-white rounded-full shadow-lg transition-all duration-300 hover:shadow-xl; }
+  .vinyl-spin { animation: spin 3s linear infinite; }
+  .card { @apply bg-white rounded-2xl shadow-inner p-6 transition-all duration-200 hover:shadow-lg; }
+  .input-field { @apply bg-surface-100 border-0 rounded-xl px-4 py-3 shadow-inner focus:shadow-lg transition-all duration-200 outline-none; }
+}
+
+@layer utilities {
+  /* Scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(156 163 175) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(156 163 175);
+    border-radius: 3px;
+  }
+  
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent;
+  }
+  
+  /* Glass effect */
+  .glass {
+    @apply bg-white/20 backdrop-blur-md border border-white/30;
+  }
+  
+  /* Animations */
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+  
+  .animate-bounce-in {
+    animation: bounce-in 0.6s ease-out;
+  }
+  
+  /* Line clamp */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes needle-drop {
+  0% { transform: rotate(-45deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
 }

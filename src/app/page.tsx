@@ -1,103 +1,148 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React from 'react';
+import MainLayout from '@/components/layout/MainLayout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import { Music, Radio, TrendingUp, Heart } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export default function HomePage() {
+  const { user, profile, loading, signInWithGoogle, signOutApp } = useAuth();
+  const router = useRouter();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <MainLayout showTabs={true}>
+      <div className="p-6 space-y-8">
+        {/* 헤더 */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full shadow-neumorphism mb-4">
+            <Music className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold text-gradient">Arch1ve</h1>
+          <p className="text-surface-600 text-lg">
+            실시간 음악 공유와 커뮤니티 트렌드를 통한<br />
+            새로운 음악 발견 플랫폼
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        {/* 기능 소개 */}
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Wave className="w-5 h-5 text-primary-500" />
+                Wave 피드
+              </CardTitle>
+              <CardDescription>
+                실시간으로 듣고 있는 음악을 공유하고 다른 사용자들의 음악을 발견하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Radio className="w-5 h-5 text-primary-500" />
+                스테이션
+              </CardTitle>
+              <CardDescription>
+                유튜브 플레이리스트를 구독하고 관리하여 나만의 음악 스테이션을 만들어보세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-primary-500" />
+                차트
+              </CardTitle>
+              <CardDescription>
+                커뮤니티 투표를 통해 주간 테마 플레이리스트에 참여하고 우승자를 발표하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-primary-500" />
+                음악 DNA
+              </CardTitle>
+              <CardDescription>
+                개인의 음악 취향을 시각화하고 통계를 통해 음악 정체성을 파악하세요
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* 인증 상태 */}
+        <div className="space-y-4">
+          {loading ? (
+            <Button className="w-full" size="lg" disabled>로딩 중...</Button>
+          ) : user ? (
+            <div className="space-y-3">
+              <div className="text-sm text-surface-600">반가워요, {profile?.displayName || user.email} 님</div>
+              {!((profile as any)?.spotifyConnected) ? (
+                <Link href="/auth/spotify">
+                  <Button className="w-full" size="lg">Spotify 계정 연결</Button>
+                </Link>
+              ) : (
+                <div className="text-center">
+                  <p className="text-green-600 mb-4">✅ Spotify 연결 완료!</p>
+                  <p className="text-sm text-surface-600 mb-4">이제 앱의 모든 기능을 사용할 수 있습니다.</p>
+                </div>
+              )}
+              <Button className="w-full" size="md" variant="ghost" onClick={signOutApp}>로그아웃</Button>
+            </div>
+          ) : (
+            <Button className="w-full" size="lg" onClick={signInWithGoogle}>
+              Google로 시작하기
+            </Button>
+          )}
+          <p className="text-center text-sm text-surface-500">
+            Spotify 계정 연결이 필요합니다
+          </p>
+        </div>
+
+        {/* 디자인 철학 */}
+        <Card variant="neumorphism">
+          <CardHeader>
+            <CardTitle className="text-center">디자인 철학</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+              <p className="text-sm text-surface-600">
+                <strong>미니멀리즘:</strong> 디터 람스의 설계 원칙을 적용한 깔끔한 인터페이스
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+              <p className="text-sm text-surface-600">
+                <strong>턴테이블 메타포:</strong> LP 레코드처럼 원형으로 디자인된 음악 카드
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-2 h-2 bg-primary-500 rounded-full mt-2 flex-shrink-0"></div>
+              <p className="text-sm text-surface-600">
+                <strong>뉴모피즘:</strong> 부드러운 그림자와 깊이감으로 물리적 은유 구현
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </MainLayout>
   );
 }
+
+// Wave 아이콘 컴포넌트 (lucide-react에 없으므로 임시로 생성)
+const Wave: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
