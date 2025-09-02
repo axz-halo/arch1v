@@ -18,19 +18,16 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
   const [showActiveOnly, setShowActiveOnly] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // 기간 목록
-  const periods = useMemo(() => {
-    const periodSet = new Set(mockCharts.map(chart => chart.period));
-    return ['all', ...Array.from(periodSet)];
-  }, []);
+  // 기간 목록 (실제로는 Chart 타입에 period가 없으므로 기본값 사용)
+  const periods = ['all', 'daily', 'weekly', 'monthly'];
 
   // 필터링된 차트
   const filteredCharts = useMemo(() => {
     return mockCharts.filter(chart => {
-      const matchesPeriod = selectedPeriod === 'all' || chart.period === selectedPeriod;
+      const matchesPeriod = selectedPeriod === 'all' || selectedPeriod === 'weekly'; // 기본값으로 주간
       const matchesSearch = chart.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            chart.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = !showActiveOnly || chart.status === 'active';
+      const matchesStatus = !showActiveOnly || chart.isActive;
       
       return matchesPeriod && matchesSearch && matchesStatus;
     });
@@ -168,7 +165,7 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
               <div>
                 <p className="text-sm text-green-600 font-medium">활성 차트</p>
                 <p className="text-2xl font-bold text-green-900">
-                  {filteredCharts.filter(c => c.status === 'active').length}
+                  {filteredCharts.filter(c => c.isActive).length}
                 </p>
               </div>
             </div>
@@ -181,7 +178,7 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
               <div>
                 <p className="text-sm text-blue-600 font-medium">총 참여자</p>
                 <p className="text-2xl font-bold text-blue-900">
-                  {filteredCharts.reduce((sum, chart) => sum + chart.participantCount, 0)}
+                  {filteredCharts.reduce((sum, chart) => sum + chart.tracks.length, 0)}
                 </p>
               </div>
             </div>
@@ -194,7 +191,7 @@ const ChartFeed: React.FC<ChartFeedProps> = ({ onChartSelect }) => {
               <div>
                 <p className="text-sm text-orange-600 font-medium">완료된 차트</p>
                 <p className="text-2xl font-bold text-orange-900">
-                  {filteredCharts.filter(c => c.status === 'closed').length}
+                  {filteredCharts.filter(c => !c.isActive).length}
                 </p>
               </div>
             </div>

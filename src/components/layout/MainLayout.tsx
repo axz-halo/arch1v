@@ -94,9 +94,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       case 'chart':
         return (
           <ChartFeed 
-            onTrackPlay={(track) => {
-              // 실제로는 트랙 재생 로직
-              console.log('Playing chart track:', track.track.title);
+            onChartSelect={(chart) => {
+              // 실제로는 차트 상세 페이지로 이동
+              console.log('Selected chart:', chart.title);
             }}
           />
         );
@@ -117,6 +117,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       {/* Header */}
       <header className="header">
         <div className="header-content">
+
           <Link href="/" className="logo">
             <div className="logo-icon">
               <span className="text-sm font-bold">A</span>

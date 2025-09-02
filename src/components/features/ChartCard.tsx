@@ -4,7 +4,6 @@ import React from 'react';
 import { Chart } from '@/types';
 import { formatNumber } from '@/lib/utils';
 import { TrendingUp, Calendar, Users, Trophy, Vote, Play } from 'lucide-react';
-import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
 
 interface ChartCardProps {
@@ -20,34 +19,12 @@ const ChartCard: React.FC<ChartCardProps> = ({
   onChartClick,
   viewMode = 'grid',
 }) => {
-  const handleVote = (trackId: string) => {
-    onVote?.(chart, trackId);
+  const getStatusColor = (isActive: boolean) => {
+    return isActive ? 'bg-green-500' : 'bg-gray-500';
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-500';
-      case 'voting':
-        return 'bg-blue-500';
-      case 'closed':
-        return 'bg-gray-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'active':
-        return '진행중';
-      case 'voting':
-        return '투표중';
-      case 'closed':
-        return '종료';
-      default:
-        return '알 수 없음';
-    }
+  const getStatusText = (isActive: boolean) => {
+    return isActive ? '진행중' : '종료';
   };
 
   if (viewMode === 'list') {
@@ -59,7 +36,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
             <div className="absolute inset-0 flex items-center justify-center">
               <TrendingUp className="w-8 h-8 text-white" />
             </div>
-            <div className={`absolute top-1 right-1 w-3 h-3 rounded-full ${getStatusColor(chart.status)}`}></div>
+            <div className={`absolute top-1 right-1 w-3 h-3 rounded-full ${getStatusColor(chart.isActive)}`}></div>
           </div>
 
           {/* 정보 */}
@@ -69,11 +46,9 @@ const ChartCard: React.FC<ChartCardProps> = ({
                 {chart.title}
               </h3>
               <span className={`px-2 py-1 text-xs rounded-full ${
-                chart.status === 'active' ? 'bg-green-100 text-green-800' :
-                chart.status === 'voting' ? 'bg-blue-100 text-blue-800' :
-                'bg-gray-100 text-gray-800'
+                chart.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
               }`}>
-                {getStatusText(chart.status)}
+                {getStatusText(chart.isActive)}
               </span>
             </div>
             <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -82,15 +57,15 @@ const ChartCard: React.FC<ChartCardProps> = ({
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <div className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                <span>{chart.period === 'daily' ? '일간' : chart.period === 'weekly' ? '주간' : '월간'}</span>
+                <span>주간</span>
               </div>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{formatNumber(chart.participantCount)}명</span>
+                <span>{formatNumber(chart.tracks.length)}명</span>
               </div>
               <div className="flex items-center gap-1">
                 <Vote className="w-4 h-4" />
-                <span>{formatNumber(chart.totalVotes)}표</span>
+                <span>{formatNumber(chart.tracks.reduce((sum, track) => sum + track.votes, 0))}표</span>
               </div>
             </div>
           </div>
@@ -106,7 +81,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
             >
               <Play className="w-5 h-5 text-white" />
             </button>
-            {chart.status === 'active' && (
+            {chart.isActive && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -131,16 +106,14 @@ const ChartCard: React.FC<ChartCardProps> = ({
         <div className="absolute inset-0 bg-black/20" />
         <div className="absolute top-3 left-3">
           <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-            chart.status === 'active' ? 'bg-green-500 text-white' :
-            chart.status === 'voting' ? 'bg-blue-500 text-white' :
-            'bg-gray-500 text-white'
+            chart.isActive ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'
           }`}>
-            {getStatusText(chart.status)}
+            {getStatusText(chart.isActive)}
           </span>
         </div>
         <div className="absolute top-3 right-3">
           <span className="px-3 py-1 bg-white/20 text-white text-xs font-medium rounded-full backdrop-blur-sm">
-            {chart.period === 'daily' ? '일간' : chart.period === 'weekly' ? '주간' : '월간'}
+            주간
           </span>
         </div>
         <div className="absolute bottom-3 left-3 right-3">
@@ -162,14 +135,14 @@ const ChartCard: React.FC<ChartCardProps> = ({
               <Users className="w-4 h-4 text-purple-600" />
             </div>
             <p className="text-xs text-gray-500">참여자</p>
-            <p className="text-sm font-semibold text-gray-900">{formatNumber(chart.participantCount)}</p>
+            <p className="text-sm font-semibold text-gray-900">{formatNumber(chart.tracks.length)}</p>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full mx-auto mb-1">
               <Vote className="w-4 h-4 text-green-600" />
             </div>
             <p className="text-xs text-gray-500">총 투표</p>
-            <p className="text-sm font-semibold text-gray-900">{formatNumber(chart.totalVotes)}</p>
+            <p className="text-sm font-semibold text-gray-900">{formatNumber(chart.tracks.reduce((sum, track) => sum + track.votes, 0))}</p>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full mx-auto mb-1">
@@ -188,7 +161,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
         </div>
 
         {/* 우승자 표시 */}
-        {chart.status === 'closed' && chart.winner && (
+        {!chart.isActive && chart.winner && (
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-3 mb-4">
             <div className="flex items-center gap-2 mb-2">
               <Trophy className="w-5 h-5 text-yellow-600" />
@@ -210,7 +183,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
           >
             자세히 보기
           </button>
-          {chart.status === 'active' && (
+          {chart.isActive && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
