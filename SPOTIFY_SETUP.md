@@ -48,7 +48,7 @@ SPOTIFY_CLIENT_ID=6936931bedbe49d8ae448889cf49520a
 SPOTIFY_CLIENT_SECRET=bde690fe9a3a451999caf002fffd98d9
 
 # NextAuth.js Configuration
-NEXTAUTH_SECRET=your_nextauth_secret_here
+NEXTAUTH_SECRET=EjEav4bbzdSz1kaDGWyreODIbxUGufPymOkOJkaD4yk=
 NEXTAUTH_URL=https://arch1v.vercel.app
 
 # Firebase Configuration
