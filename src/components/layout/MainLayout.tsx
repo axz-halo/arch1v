@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import BottomNavigation from './BottomNavigation';
 import WaveFeed from '@/components/features/WaveFeed';
 import WaveModal from '@/components/features/WaveModal';
@@ -24,6 +25,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   children 
 }) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [selectedWave, setSelectedWave] = useState<Wave | null>(null);
   const [isWaveModalOpen, setIsWaveModalOpen] = useState(false);
@@ -53,6 +55,25 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    // 각 탭에 해당하는 페이지로 이동
+    switch (tab) {
+      case 'wave':
+        router.push('/wave');
+        break;
+      case 'station':
+        router.push('/station');
+        break;
+      case 'chart':
+        router.push('/chart');
+        break;
+      case 'profile':
+        router.push('/profile');
+        break;
+    }
   };
 
   const renderTabContent = () => {
@@ -108,9 +129,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">음악 파도타기</h2>
-                <button className="text-sm text-primary-500 hover:text-primary-600 font-medium">
+                <Link href="/wave" className="text-sm text-primary-500 hover:text-primary-600 font-medium">
                   모두 보기
-                </button>
+                </Link>
               </div>
               <WaveFeed 
                 onWaveSelect={handleWaveSelect}
@@ -247,7 +268,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       {showTabs && (
         <BottomNavigation 
           activeTab={activeTab} 
-          onTabChange={setActiveTab} 
+          onTabChange={handleTabChange} 
         />
       )}
 
