@@ -45,6 +45,7 @@ export interface Wave {
   userId: string;
   user: User;
   track: Track;
+  message?: string; // 사용자가 추가한 메시지
   timestamp: Date;
   reactions: Reaction[];
   comments: Comment[];

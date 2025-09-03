@@ -470,6 +470,7 @@ export const mockWaves: Wave[] = [
     userId: '1',
     user: mockUsers[0],
     track: mockTracks[0],
+    message: '오늘 하루도 BTS와 함께! 💜',
     timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5분 전
     reactions: [
       { id: 'r1', userId: '2', waveId: 'w1', type: 'like', createdAt: new Date() },
@@ -493,6 +494,7 @@ export const mockWaves: Wave[] = [
     userId: '2',
     user: mockUsers[1],
     track: mockTracks[1],
+    message: '운동할 때 듣기 완벽한 곡이에요!',
     timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15분 전
     reactions: [
       { id: 'r3', userId: '1', waveId: 'w2', type: 'fire', createdAt: new Date() },
@@ -505,6 +507,7 @@ export const mockWaves: Wave[] = [
     userId: '3',
     user: mockUsers[2],
     track: mockTracks[2],
+    message: '클래식의 명곡을 다시 한번...',
     timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30분 전
     reactions: [
       { id: 'r4', userId: '1', waveId: 'w3', type: 'like', createdAt: new Date() },
@@ -538,6 +541,7 @@ export const mockWaves: Wave[] = [
     userId: '1',
     user: mockUsers[0],
     track: mockTracks[3],
+    message: 'aespa 신곡 너무 좋아요!',
     timestamp: new Date(Date.now() - 1000 * 60 * 45), // 45분 전
     reactions: [
       { id: 'r7', userId: '3', waveId: 'w4', type: 'love', createdAt: new Date() },
@@ -550,6 +554,7 @@ export const mockWaves: Wave[] = [
     userId: '2',
     user: mockUsers[1],
     track: mockTracks[4],
+    message: 'SOUR 앨범 전체가 다 좋아요',
     timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1시간 전
     reactions: [
       { id: 'r8', userId: '1', waveId: 'w5', type: 'like', createdAt: new Date() },
@@ -574,6 +579,19 @@ export const mockWaves: Wave[] = [
 export const generateMoreWaves = (page: number): Wave[] => {
   const baseTime = Date.now() - 1000 * 60 * 60 * (page + 1); // 페이지마다 1시간씩 과거
   
+  const messages = [
+    '오늘 기분 좋은 곡이에요!',
+    '이 곡 듣고 있으면 기분이 좋아져요',
+    '추천하고 싶은 곡입니다',
+    '완전 내 취향이에요 💕',
+    '운동할 때 듣기 좋아요',
+    '공부할 때 듣는 곡이에요',
+    '드라이브할 때 듣기 완벽해요',
+    '새벽에 듣기 좋은 곡',
+    '스트레스 해소용 음악이에요',
+    '기분 전환이 필요할 때 듣는 곡',
+  ];
+  
   return Array.from({ length: 5 }, (_, index) => {
     const userIndex = index % mockUsers.length;
     const trackIndex = index % mockTracks.length;
@@ -584,6 +602,7 @@ export const generateMoreWaves = (page: number): Wave[] => {
       userId: mockUsers[userIndex].id,
       user: mockUsers[userIndex],
       track: mockTracks[trackIndex],
+      message: Math.random() > 0.3 ? messages[Math.floor(Math.random() * messages.length)] : undefined,
       timestamp: new Date(baseTime - 1000 * 60 * index * 10),
       reactions: Array.from({ length: Math.floor(Math.random() * 5) }, (_, i) => ({
         id: `r${uniqueId}_${i}`,
