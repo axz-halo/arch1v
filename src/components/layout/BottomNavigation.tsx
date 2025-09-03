@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TabType } from '@/types';
-import { TrendingUp, Radio, BarChart3, User } from 'lucide-react';
+import { Music, Radio, TrendingUp, User } from 'lucide-react';
 
 interface BottomNavigationProps {
   activeTab: TabType;
@@ -16,8 +16,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   const tabs = [
     {
       id: 'wave' as TabType,
-      label: '피드',
-      icon: TrendingUp,
+      label: '파도',
+      icon: Music,
     },
     {
       id: 'station' as TabType,
@@ -27,7 +27,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
     {
       id: 'chart' as TabType,
       label: '차트',
-      icon: BarChart3,
+      icon: TrendingUp,
     },
     {
       id: 'profile' as TabType,
@@ -37,8 +37,8 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ];
 
   return (
-    <nav className="tab-navigation">
-      <div className="tab-container">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-200 z-50">
+      <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-around">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -47,10 +47,18 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`tab-item ${isActive ? 'active' : ''}`}
+              className={`flex flex-col items-center gap-1 py-2 px-4 rounded-2xl transition-all duration-200 ${
+                isActive 
+                  ? 'text-primary-500 bg-primary-50 shadow-sm' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+              }`}
             >
-              <Icon className="tab-icon" />
-              <span className="tab-label">{tab.label}</span>
+              <div className={`w-6 h-6 transition-all duration-200 ${
+                isActive ? 'scale-110' : ''
+              }`}>
+                <Icon className="w-full h-full" />
+              </div>
+              <span className="text-xs font-medium">{tab.label}</span>
             </button>
           );
         })}
