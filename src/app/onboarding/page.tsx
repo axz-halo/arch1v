@@ -2,55 +2,59 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { useSession } from 'next-auth/react';
 import { Music, User, Check, ArrowRight, SkipForward, Sparkles, Heart, Radio, TrendingUp } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { data: session, status } = useSession();
   const [currentStep, setCurrentStep] = useState(1);
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
-  const [spotifyConnected, setSpotifyConnected] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    // 인증되지 않은 사용자는 홈으로 리다이렉트
+    if (status === 'unauthenticated') {
       router.push('/');
       return;
     }
 
-    if (profile?.displayName) {
-      setDisplayName(profile.displayName);
+    // 로딩 중이면 대기
+    if (status === 'loading') {
+      return;
     }
-    if ((profile as { spotifyConnected?: boolean })?.spotifyConnected) {
-      setSpotifyConnected(true);
-    }
-  }, [user, profile, router]);
 
-  const handleSpotifyConnect = async () => {
-    setLoading(true);
-    try {
-      const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}&scope=user-read-private,user-read-email,user-top-read,playlist-read-private,playlist-modify-public,playlist-modify-private`;
-      window.location.href = spotifyAuthUrl;
-    } catch (error) {
-      console.error('Spotify 연결 실패:', error);
-      setLoading(false);
+    // Spotify가 이미 연동되어 있으면 닉네임 설정으로 건너뛰기
+    if (session?.spotifyProfile?.display_name) {
+      setDisplayName(session.spotifyProfile.display_name);
+      setCurrentStep(2);
     }
-  };
+  }, [session, status, router]);
 
   const handleCompleteOnboarding = async () => {
     setLoading(true);
     try {
-      // 실제로는 API 호출로 프로필 업데이트
-      console.log('온보딩 완료:', { displayName, bio, spotifyConnected });
-      
-      // 메인 앱으로 이동
-      setTimeout(() => {
+      // 프로필 정보를 서버에 저장하는 API 호출
+      const response = await fetch('/api/user/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          displayName: displayName.trim(),
+          bio: bio.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        // 성공적으로 저장되면 메인 앱으로 이동
         router.push('/app');
-      }, 1000);
+      } else {
+        throw new Error('프로필 저장 실패');
+      }
     } catch (error) {
       console.error('온보딩 완료 실패:', error);
       setLoading(false);
@@ -76,8 +80,8 @@ export default function OnboardingPage() {
     },
     {
       id: 3,
-      title: 'Spotify 연동',
-      subtitle: 'Spotify 계정을 연동하여 음악 취향을 분석하고 공유하세요',
+      title: 'Spotify 연동 확인',
+      subtitle: 'Spotify 계정이 정상적으로 연동되었는지 확인해주세요',
       icon: <Music className="w-8 h-8" />,
     },
   ];
@@ -148,6 +152,11 @@ export default function OnboardingPage() {
                   placeholder="멋진 닉네임을 입력해주세요"
                   className="w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all duration-200 text-lg"
                 />
+                {session?.spotifyProfile?.display_name && (
+                  <p className="text-sm text-green-600 mt-2">
+                    Spotify 프로필에서 가져온 이름: {session.spotifyProfile.display_name}
+                  </p>
+                )}
               </div>
               
               <div>
@@ -173,8 +182,8 @@ export default function OnboardingPage() {
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Music className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Spotify 연동</h2>
-              <p className="text-gray-600 text-lg">Spotify 계정을 연동하여 음악 취향을 분석하고 공유하세요</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Spotify 연동 확인</h2>
+              <p className="text-gray-600 text-lg">Spotify 계정이 정상적으로 연동되었는지 확인해주세요</p>
             </div>
             
             <Card className="p-8 border-2 border-gray-100 shadow-lg">
@@ -189,21 +198,28 @@ export default function OnboardingPage() {
                   </div>
                 </div>
                 
-                {spotifyConnected ? (
+                {session?.accessToken ? (
                   <div className="flex items-center gap-3 text-green-600 bg-green-50 px-6 py-3 rounded-full">
                     <Check className="w-6 h-6" />
                     <span className="font-semibold text-lg">연동됨</span>
                   </div>
                 ) : (
-                  <Button
-                    onClick={handleSpotifyConnect}
-                    disabled={loading}
-                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg"
-                  >
-                    {loading ? '연동 중...' : '연동하기'}
-                  </Button>
+                  <div className="flex items-center gap-3 text-red-600 bg-red-50 px-6 py-3 rounded-full">
+                    <span className="font-semibold text-lg">연동 필요</span>
+                  </div>
                 )}
               </div>
+              
+              {session?.spotifyProfile && (
+                <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                  <h4 className="font-semibold text-blue-900 mb-2">Spotify 프로필 정보</h4>
+                  <div className="space-y-2 text-sm text-blue-800">
+                    <p><strong>이름:</strong> {session.spotifyProfile.display_name}</p>
+                    <p><strong>이메일:</strong> {session.spotifyProfile.email}</p>
+                    <p><strong>국가:</strong> {session.spotifyProfile.country}</p>
+                  </div>
+                </div>
+              )}
             </Card>
             
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6">
@@ -246,12 +262,18 @@ export default function OnboardingPage() {
     }
   };
 
-  if (!user) {
+  // 로딩 상태
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
       </div>
     );
+  }
+
+  // 인증되지 않은 사용자
+  if (status === 'unauthenticated') {
+    return null; // 리다이렉트 처리됨
   }
 
   return (
@@ -327,7 +349,7 @@ export default function OnboardingPage() {
             ) : (
               <Button
                 onClick={handleCompleteOnboarding}
-                disabled={loading}
+                disabled={loading || !displayName.trim()}
                 className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-8 py-3 text-lg font-semibold rounded-2xl"
               >
                 {loading ? '완료 중...' : '온보딩 완료'}

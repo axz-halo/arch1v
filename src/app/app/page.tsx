@@ -2,20 +2,34 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { useSession } from 'next-auth/react';
 import MainLayout from '@/components/layout/MainLayout';
 
 export default function AppPage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (!loading && !user) {
+    // 인증되지 않은 사용자는 홈으로 리다이렉트
+    if (status === 'unauthenticated') {
       router.push('/');
+      return;
     }
-  }, [user, loading, router]);
 
-  if (loading) {
+    // 로딩 중이면 대기
+    if (status === 'loading') {
+      return;
+    }
+
+    // Spotify가 연동되지 않은 경우 온보딩으로 리다이렉트
+    if (status === 'authenticated' && !session?.accessToken) {
+      router.push('/onboarding');
+      return;
+    }
+  }, [session, status, router]);
+
+  // 로딩 상태
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
@@ -23,8 +37,14 @@ export default function AppPage() {
     );
   }
 
-  if (!user) {
-    return null;
+  // 인증되지 않은 사용자
+  if (status === 'unauthenticated') {
+    return null; // 리다이렉트 처리됨
+  }
+
+  // Spotify 연동이 필요한 경우
+  if (!session?.accessToken) {
+    return null; // 온보딩으로 리다이렉트 처리됨
   }
 
   return <MainLayout showTabs={true} />;
