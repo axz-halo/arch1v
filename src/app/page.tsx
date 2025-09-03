@@ -94,8 +94,8 @@ export default function HomePage() {
                   <div className="text-center">
                     <p className="text-green-600 mb-4 text-lg">✅ Spotify 연결 완료!</p>
                     <p className="text-sm text-gray-600 mb-4">이제 앱의 모든 기능을 사용할 수 있습니다.</p>
-                    <Link href="/onboarding">
-                      <Button className="w-full" size="lg">계정 설정하기</Button>
+                    <Link href="/app">
+                      <Button className="w-full" size="lg">앱 시작하기</Button>
                     </Link>
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export default function HomePage() {
                   <Button 
                     className="w-full" 
                     size="lg"
-                    onClick={() => signIn('spotify', { callbackUrl: '/onboarding' })}
+                    onClick={() => signIn('spotify', { callbackUrl: '/app' })}
                   >
                     <Music className="w-5 h-5 mr-2" />
                     Spotify로 시작하기

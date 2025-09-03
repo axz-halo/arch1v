@@ -20,12 +20,6 @@ export default function AppPage() {
     if (status === 'loading') {
       return;
     }
-
-    // Spotify가 연동되지 않은 경우 온보딩으로 리다이렉트
-    if (status === 'authenticated' && !session?.accessToken) {
-      router.push('/onboarding');
-      return;
-    }
   }, [session, status, router]);
 
   // 로딩 상태
@@ -40,11 +34,6 @@ export default function AppPage() {
   // 인증되지 않은 사용자
   if (status === 'unauthenticated') {
     return null; // 리다이렉트 처리됨
-  }
-
-  // Spotify 연동이 필요한 경우
-  if (!session?.accessToken) {
-    return null; // 온보딩으로 리다이렉트 처리됨
   }
 
   return <MainLayout showTabs={true} />;
