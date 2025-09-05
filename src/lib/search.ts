@@ -149,10 +149,10 @@ function mergeDuplicateTracks(spotifyTracks: SearchResult[], youtubeVideos: Sear
         ...spotifyTrack,
         externalUrls: {
           spotify: spotifyTrack.externalUrls?.spotify,
-          youtube: bestMatch.externalUrls?.youtube,
+          youtube: (bestMatch as SearchResult).externalUrls?.youtube,
         },
       });
-      processedYouTubeIds.add(bestMatch.id);
+      processedYouTubeIds.add((bestMatch as SearchResult).id);
     } else {
       merged.push(spotifyTrack);
     }

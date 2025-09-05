@@ -319,7 +319,7 @@ export async function parseYouTubeLink(
     const videoId = extractYouTubeVideoId(url);
     
     if (!videoId) {
-      return { type: urlType, basicInfo };
+      return { type: urlType, basicInfo: basicInfo || undefined };
     }
 
     const videoInfo = await getYouTubeVideoInfo(videoId, apiKey);
@@ -327,7 +327,7 @@ export async function parseYouTubeLink(
     return {
       type: urlType,
       videoInfo: videoInfo || undefined,
-      basicInfo,
+      basicInfo: basicInfo || undefined,
     };
   }
 
@@ -335,7 +335,7 @@ export async function parseYouTubeLink(
     const playlistId = extractYouTubePlaylistId(url);
     
     if (!playlistId) {
-      return { type: urlType, basicInfo };
+      return { type: urlType, basicInfo: basicInfo || undefined };
     }
 
     const playlistInfo = await getYouTubePlaylistInfo(playlistId, apiKey);
@@ -343,9 +343,9 @@ export async function parseYouTubeLink(
     return {
       type: urlType,
       playlistInfo: playlistInfo || undefined,
-      basicInfo,
+      basicInfo: basicInfo || undefined,
     };
   }
 
-  return { type: urlType, basicInfo };
+  return { type: urlType, basicInfo: basicInfo || undefined };
 }
