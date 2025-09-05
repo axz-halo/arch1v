@@ -22,6 +22,28 @@ const config: Config = {
           800: '#9a3412',
           900: '#7c2d12',
         },
+        // HOSONO 스타일 크림 컬러
+        cream: {
+          50: '#fefcf8',
+          100: '#fdf8f0',
+          200: '#f5f5f3',
+          300: '#f0f0ed',
+          400: '#e8e8e5',
+          500: '#dcdcd9',
+        },
+        // 액센트 컬러
+        accent: {
+          blue: '#4285f4',
+          green: '#34a853',
+          purple: '#9c27b0',
+        },
+        // 시맨틱 컬러
+        semantic: {
+          success: '#10b981',
+          warning: '#f59e0b',
+          error: '#ef4444',
+          info: '#3b82f6',
+        },
         // 뉴모피즘을 위한 그레이 톤
         surface: {
           50: '#fafafa',

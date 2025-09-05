@@ -220,38 +220,42 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40 safe-area-pt">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 text-xl font-bold text-gray-900 no-underline">
+          <Link href="/" className="flex items-center gap-3 text-xl font-bold text-gray-900 no-underline touch-target">
             <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white">
               <span className="text-sm font-bold">A</span>
             </div>
-            <span>Arch1v</span>
+            <span className="hidden sm:block">Arch1v</span>
           </Link>
           
-          <div className="flex-1 max-w-md mx-8">
+          <div className="flex-1 max-w-md mx-4 sm:mx-8">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input 
-                placeholder="음악, 아티스트, 스테이션 검색..." 
-                className="w-full bg-gray-100 border-0 rounded-xl py-3 pl-10 pr-4 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all duration-200" 
+                placeholder="음악, 아티스트 검색..." 
+                className="w-full bg-gray-100 border-0 rounded-xl py-3 pl-10 pr-4 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all duration-200 touch-target" 
                 type="text"
+                aria-label="음악 검색"
               />
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button 
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 touch-target"
+              aria-label="알림"
+            >
               <Bell className="w-5 h-5" />
             </button>
             {session?.spotifyProfile?.images?.[0]?.url ? (
               <img 
                 src={session.spotifyProfile.images[0].url} 
-                alt="Profile" 
-                className="w-8 h-8 rounded-full"
+                alt="프로필" 
+                className="w-8 h-8 rounded-full touch-target"
               />
             ) : (
-              <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center touch-target">
                 <User className="w-4 h-4 text-white" />
               </div>
             )}

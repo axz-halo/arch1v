@@ -290,3 +290,245 @@ export async function getPlaylistInfo(accessToken: string, playlistId: string) {
     return null;
   }
 }
+
+// Spotify 검색
+export async function searchSpotify(
+  accessToken: string, 
+  query: string, 
+  types: string[] = ['track', 'artist', 'album', 'playlist'],
+  limit: number = 20
+) {
+  try {
+    const typeParam = types.join(',');
+    const response = await fetch(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${typeParam}&limit=${limit}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      }
+    );
+    
+    if (!response.ok) {
+      throw new Error('Failed to search Spotify');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error searching Spotify:', error);
+    return null;
+  }
+}
+
+// 재생 제어 함수들
+export async function playTrack(accessToken: string, trackUri: string, deviceId?: string) {
+  try {
+    const body: any = {
+      uris: [trackUri],
+    };
+    
+    if (deviceId) {
+      body.device_id = deviceId;
+    }
+    
+    const response = await fetch('https://api.spotify.com/v1/me/player/play', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to play track');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error playing track:', error);
+    return false;
+  }
+}
+
+export async function pausePlayback(accessToken: string, deviceId?: string) {
+  try {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`
+      : 'https://api.spotify.com/v1/me/player/pause';
+      
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to pause playback');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error pausing playback:', error);
+    return false;
+  }
+}
+
+export async function skipToNext(accessToken: string, deviceId?: string) {
+  try {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`
+      : 'https://api.spotify.com/v1/me/player/next';
+      
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to skip to next');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error skipping to next:', error);
+    return false;
+  }
+}
+
+export async function skipToPrevious(accessToken: string, deviceId?: string) {
+  try {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`
+      : 'https://api.spotify.com/v1/me/player/previous';
+      
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to skip to previous');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error skipping to previous:', error);
+    return false;
+  }
+}
+
+export async function setVolume(accessToken: string, volumePercent: number, deviceId?: string) {
+  try {
+    const url = deviceId 
+      ? `https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}&device_id=${deviceId}`
+      : `https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}`;
+      
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to set volume');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error setting volume:', error);
+    return false;
+  }
+}
+
+// 사용자 디바이스 목록 가져오기
+export async function getAvailableDevices(accessToken: string) {
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me/player/devices', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch devices');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching devices:', error);
+    return null;
+  }
+}
+
+// 플레이리스트에 트랙 추가
+export async function addTrackToPlaylist(accessToken: string, playlistId: string, trackUri: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uris: [trackUri],
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to add track to playlist');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding track to playlist:', error);
+    return null;
+  }
+}
+
+// 사용자 라이브러리에 트랙 저장/제거
+export async function saveTrack(accessToken: string, trackId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to save track');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error saving track:', error);
+    return false;
+  }
+}
+
+export async function removeTrack(accessToken: string, trackId: string) {
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to remove track');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error removing track:', error);
+    return false;
+  }
+}

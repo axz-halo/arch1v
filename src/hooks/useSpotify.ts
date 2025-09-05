@@ -13,6 +13,16 @@ import {
   getArtistInfo,
   getPlaylistInfo,
   refreshSpotifyToken,
+  searchSpotify,
+  playTrack,
+  pausePlayback,
+  skipToNext,
+  skipToPrevious,
+  setVolume,
+  getAvailableDevices,
+  addTrackToPlaylist,
+  saveTrack,
+  removeTrack,
 } from '@/lib/spotify';
 
 interface SpotifyTrack {
@@ -80,6 +90,9 @@ export const useSpotify = () => {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState<SpotifyTrack[]>([]);
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
+  const [searchResults, setSearchResults] = useState<any>(null);
+  const [devices, setDevices] = useState<any[]>([]);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -228,6 +241,156 @@ export const useSpotify = () => {
     }
   }, [profile?.spotify?.refreshToken]);
 
+  // Spotify 검색
+  const searchTracks = useCallback(async (query: string, types: string[] = ['track'], limit: number = 20) => {
+    if (!accessToken) return null;
+
+    try {
+      setLoading(true);
+      const data = await searchSpotify(accessToken, query, types, limit);
+      setSearchResults(data);
+      return data;
+    } catch (err) {
+      setError('검색에 실패했습니다.');
+      console.error('Error searching:', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, [accessToken]);
+
+  // 재생 제어 함수들
+  const playTrackById = useCallback(async (trackUri: string, deviceId?: string) => {
+    if (!accessToken) return false;
+
+    try {
+      const success = await playTrack(accessToken, trackUri, deviceId);
+      if (success) {
+        setIsPlaying(true);
+        await fetchCurrentTrack(); // 현재 재생 중인 트랙 업데이트
+      }
+      return success;
+    } catch (err) {
+      setError('재생에 실패했습니다.');
+      console.error('Error playing track:', err);
+      return false;
+    }
+  }, [accessToken, fetchCurrentTrack]);
+
+  const pauseCurrentTrack = useCallback(async (deviceId?: string) => {
+    if (!accessToken) return false;
+
+    try {
+      const success = await pausePlayback(accessToken, deviceId);
+      if (success) {
+        setIsPlaying(false);
+      }
+      return success;
+    } catch (err) {
+      setError('일시정지에 실패했습니다.');
+      console.error('Error pausing:', err);
+      return false;
+    }
+  }, [accessToken]);
+
+  const skipNext = useCallback(async (deviceId?: string) => {
+    if (!accessToken) return false;
+
+    try {
+      const success = await skipToNext(accessToken, deviceId);
+      if (success) {
+        await fetchCurrentTrack(); // 현재 재생 중인 트랙 업데이트
+      }
+      return success;
+    } catch (err) {
+      setError('다음 트랙으로 이동에 실패했습니다.');
+      console.error('Error skipping next:', err);
+      return false;
+    }
+  }, [accessToken, fetchCurrentTrack]);
+
+  const skipPrevious = useCallback(async (deviceId?: string) => {
+    if (!accessToken) return false;
+
+    try {
+      const success = await skipToPrevious(accessToken, deviceId);
+      if (success) {
+        await fetchCurrentTrack(); // 현재 재생 중인 트랙 업데이트
+      }
+      return success;
+    } catch (err) {
+      setError('이전 트랙으로 이동에 실패했습니다.');
+      console.error('Error skipping previous:', err);
+      return false;
+    }
+  }, [accessToken, fetchCurrentTrack]);
+
+  const changeVolume = useCallback(async (volumePercent: number, deviceId?: string) => {
+    if (!accessToken) return false;
+
+    try {
+      return await setVolume(accessToken, volumePercent, deviceId);
+    } catch (err) {
+      setError('볼륨 조절에 실패했습니다.');
+      console.error('Error setting volume:', err);
+      return false;
+    }
+  }, [accessToken]);
+
+  // 디바이스 목록 가져오기
+  const fetchDevices = useCallback(async () => {
+    if (!accessToken) return;
+
+    try {
+      const data = await getAvailableDevices(accessToken);
+      if (data?.devices) {
+        setDevices(data.devices);
+      }
+    } catch (err) {
+      setError('디바이스 목록을 가져오는데 실패했습니다.');
+      console.error('Error fetching devices:', err);
+    }
+  }, [accessToken]);
+
+  // 플레이리스트에 트랙 추가
+  const addToPlaylist = useCallback(async (playlistId: string, trackUri: string) => {
+    if (!accessToken) return false;
+
+    try {
+      const result = await addTrackToPlaylist(accessToken, playlistId, trackUri);
+      return !!result;
+    } catch (err) {
+      setError('플레이리스트에 트랙 추가에 실패했습니다.');
+      console.error('Error adding track to playlist:', err);
+      return false;
+    }
+  }, [accessToken]);
+
+  // 라이브러리에 트랙 저장/제거
+  const saveTrackToLibrary = useCallback(async (trackId: string) => {
+    if (!accessToken) return false;
+
+    try {
+      return await saveTrack(accessToken, trackId);
+    } catch (err) {
+      setError('라이브러리에 저장에 실패했습니다.');
+      console.error('Error saving track:', err);
+      return false;
+    }
+  }, [accessToken]);
+
+  const removeTrackFromLibrary = useCallback(async (trackId: string) => {
+    if (!accessToken) return false;
+
+    try {
+      return await removeTrack(accessToken, trackId);
+    } catch (err) {
+      setError('라이브러리에서 제거에 실패했습니다.');
+      console.error('Error removing track:', err);
+      return false;
+    }
+  }, [accessToken]);
+
   // 에러 초기화
   const clearError = useCallback(() => {
     setError(null);
@@ -248,6 +411,9 @@ export const useSpotify = () => {
     playlists,
     recentlyPlayed,
     topTracks,
+    searchResults,
+    devices,
+    isPlaying,
     loading,
     error,
     fetchCurrentTrack,
@@ -259,6 +425,16 @@ export const useSpotify = () => {
     fetchArtistInfo,
     fetchPlaylistInfo,
     refreshToken,
+    searchTracks,
+    playTrackById,
+    pauseCurrentTrack,
+    skipNext,
+    skipPrevious,
+    changeVolume,
+    fetchDevices,
+    addToPlaylist,
+    saveTrackToLibrary,
+    removeTrackFromLibrary,
     clearError,
   };
 };
